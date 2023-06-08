@@ -15,5 +15,8 @@
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "sequelize": "^6.32.0"
+  },
+  "devDependencies": {
+    "prettier": "2.8.8"
   }
 }
