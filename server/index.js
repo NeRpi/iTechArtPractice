@@ -1,8 +1,8 @@
-import "dotenv/config.js";
-import express from "express";
-import cors from "cors";
-import dbConnector from "./db/dbConnector.js";
-import routers from "./routers/index.js";
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const { sequelize } = require("./db/entities/index");
+const routers = require("./routers/index.js");
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -13,8 +13,7 @@ app.use("/api", routers);
 
 const start = async () => {
   try {
-    await dbConnector.authenticate();
-    await dbConnector.sync({ alter: true });
+    await sequelize.authenticate();
     app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
   } catch (e) {
     console.log(e);

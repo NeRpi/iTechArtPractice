@@ -1,11 +1,12 @@
-import UserEntity from "../db/entitys/user.entity.js";
-import userEntity from "../db/entitys/user.entity.js";
+const { sequelize } = require("../../db/entities");
+const { DataTypes } = require("sequelize");
+const User = require("../../db/entities/user")(sequelize, DataTypes);
 
 class UserController {
   async createUser(req, res) {
     try {
       const { name, surname, DoB, email, password } = req.body;
-      const user = await UserEntity.create({
+      const user = await User.create({
         name,
         surname,
         DoB,
@@ -19,13 +20,13 @@ class UserController {
   }
 
   async getUsers(req, res) {
-    const users = await UserEntity.findAll();
+    const users = await User.findAll();
     return res.json(users);
   }
 
   async getUserById(req, res) {
     const { id } = req.params;
-    const user = await UserEntity.findOne({ where: { id } });
+    const user = await User.findOne({ where: { id } });
     return res.json(user);
   }
 
@@ -33,7 +34,7 @@ class UserController {
     try {
       const { id } = req.params;
       const { name, surname, DoB, email, password } = req.body;
-      const user = await UserEntity.update(
+      const user = await User.update(
         { name, surname, DoB, email, password },
         { where: { id } }
       );
@@ -45,9 +46,9 @@ class UserController {
 
   async deleteUser(req, res) {
     const { id } = req.params;
-    const user = await userEntity.destroy({ where: { id } });
+    const user = await User.destroy({ where: { id } });
     return res.json(user);
   }
 }
 
-export default new UserController();
+module.exports = new UserController();
