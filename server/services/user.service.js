@@ -1,6 +1,6 @@
-const UserRepo = require("../repositories/user.repo");
+import UserRepo from "../repositories/user.repo.js";
 
-class UserService {
+export default class UserService {
   constructor() {
     this._userRepo = new UserRepo();
   }
@@ -57,5 +57,3 @@ class UserService {
     else return { value: res.value };
   }
 }
-
-module.exports = UserService;

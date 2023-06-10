@@ -1,8 +1,8 @@
-const dbConnector = require("../db/dbConnector");
-const { DataTypes } = require("sequelize");
-const User = require("../db/entities/user");
+import dbConnector from "../db/dbConnector.js";
+import { DataTypes } from "sequelize";
+import User from "../db/entities/user.js";
 
-class UserRepo {
+export default class UserRepo {
   constructor() {
     this._userEntity = User(dbConnector, DataTypes);
   }
@@ -61,5 +61,3 @@ class UserRepo {
     }
   }
 }
-
-module.exports = UserRepo;

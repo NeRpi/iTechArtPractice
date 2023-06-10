@@ -1,4 +1,4 @@
-const UserService = require("../services/user.service");
+import UserService from "../services/user.service.js";
 
 class UserController {
   constructor() {
@@ -50,4 +50,4 @@ class UserController {
   };
 }
 
-module.exports = new UserController();
+export default new UserController();

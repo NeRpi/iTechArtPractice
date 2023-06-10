@@ -1,8 +1,8 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const dbConnector = require("./db/dbConnector");
-const routers = require("./routers/index.js");
+import "dotenv/config.js";
+import express from "express";
+import cors from "cors";
+import dbConnector from "./db/dbConnector.js";
+import routers from "./routers/index.js";
 
 const PORT = process.env.PORT || 5000;
 const app = express();
