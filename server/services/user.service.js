@@ -5,13 +5,14 @@ export default class UserService {
     this._userRepo = new UserRepo();
   }
 
-  async create(name, surname, DoB, email, password) {
+  async create(name, surname, DoB, email, password, roleId) {
     const res = await this._userRepo.create(
       name,
       surname,
       DoB,
       email,
-      password
+      password,
+      roleId
     );
     if (res?.error) return { error: res.error };
     return { value: res.value };

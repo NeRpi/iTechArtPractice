@@ -1,13 +1,11 @@
-import dbConnector from "../db/dbConnector.js";
-import { DataTypes } from "sequelize";
-import User from "../db/entities/user.js";
+import { User, Role } from "../db/entities/index.js";
 
 export default class UserRepo {
   constructor() {
-    this._userEntity = User(dbConnector, DataTypes);
+    this._userEntity = User;
   }
 
-  async create(name, surname, DoB, email, password) {
+  async create(name, surname, DoB, email, password, roleId) {
     try {
       const user = await this._userEntity.create({
         name,
@@ -15,18 +13,22 @@ export default class UserRepo {
         DoB,
         email,
         password,
+        roleId,
       });
       return { value: user };
     } catch (e) {
-      return { error: "Не удалось сохдать нового пользователя" };
+      return { error: "Не удалось создать нового пользователя" };
     }
   }
 
   async getList() {
     try {
-      const users = await this._userEntity.findAll();
+      const users = await this._userEntity.findAll({
+        include: Role,
+      });
       return { value: users };
     } catch (e) {
+      console.log(e);
       return { error: "Не удалось полусить список пользователей" };
     }
   }

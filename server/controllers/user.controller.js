@@ -6,19 +6,19 @@ class UserController {
   }
 
   create = async (req, res) => {
-    const { name, surname, DoB, email, password } = req.body;
+    const { name, surname, DoB, email, password, roleId } = req.body;
     const result = await this._userService.create(
       name,
       surname,
       DoB,
       email,
-      password
+      password,
+      roleId
     );
     return res.json(result);
   };
 
   getList = async (req, res) => {
-    console.log(this._userService);
     const result = await this._userService.getList();
     return res.json(result);
   };

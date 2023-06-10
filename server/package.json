@@ -19,6 +19,7 @@
     "sequelize": "^6.32.0"
   },
   "devDependencies": {
+    "babel-register": "^6.26.0",
     "prettier": "2.8.8",
     "sequelize-cli": "^6.6.1"
   },
