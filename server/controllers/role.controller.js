@@ -16,6 +16,12 @@ class RoleController {
     return res.json(result);
   };
 
+  getById = async (req, res) => {
+    const { id } = req.params;
+    const result = await this._roleService.getById(id);
+    return res.json(result);
+  };
+
   updateById = async (req, res) => {
     const { id } = req.params;
     const { role } = req.body;

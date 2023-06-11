@@ -10,7 +10,7 @@ export default class RoleRepo {
       const role = await this._roleEntity.create({ role: roleName });
       return { value: role };
     } catch (e) {
-      return { error: "Не удалось сохдать нового пользователя" };
+      return { error: "Не удалось создать новой роли" };
     }
   }
 
@@ -19,7 +19,16 @@ export default class RoleRepo {
       const roles = await this._roleEntity.findAll();
       return { value: roles };
     } catch (e) {
-      return { error: "Не удалось полусить список пользователей" };
+      return { error: "Не удалось полусить список ролей" };
+    }
+  }
+
+  async getById(id) {
+    try {
+      const user = await this._roleEntity.findOne({ where: { id } });
+      return { value: user };
+    } catch (e) {
+      return { error: "Не удалось получить роли по id" };
     }
   }
 
@@ -31,7 +40,7 @@ export default class RoleRepo {
       );
       return { value: res };
     } catch (e) {
-      return { error: "Не удалось обновить пользователя" };
+      return { error: "Не удалось обновить роль" };
     }
   }
 
@@ -40,7 +49,7 @@ export default class RoleRepo {
       const res = await this._roleEntity.destroy({ where: { id } });
       return { value: res };
     } catch (e) {
-      return { error: "Неудалось удалить пользователя" };
+      return { error: "Неудалось удалить роль" };
     }
   }
 }

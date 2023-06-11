@@ -5,9 +5,9 @@ module.exports = {
     await queryInterface.createTable("Roles", {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        defaultValue: Sequelize.fn("uuid_generate_v4"),
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       role: {
         type: Sequelize.STRING,
@@ -22,7 +22,7 @@ module.exports = {
       },
     });
     await queryInterface.addColumn("Users", "roleId", {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       references: {
         model: "Roles",
         key: "id",
@@ -32,7 +32,7 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Roles");
     await queryInterface.removeColumn("Users", "roleId");
+    await queryInterface.dropTable("Roles");
   },
 };

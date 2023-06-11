@@ -9,7 +9,9 @@ const model = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Role.hasMany(models.User, { foreignKey: { name: "roleId" } });
+      Role.hasMany(models.User, {
+        foreignKey: { name: "roleId", type: DataTypes.UUID },
+      });
     }
   }
 

@@ -33,6 +33,19 @@ export default class UserRepo {
     }
   }
 
+  async getListByRole(roleId) {
+    try {
+      const users = await this._userEntity.findAll({
+        where: { roleId },
+        include: Role,
+      });
+      return { value: users };
+    } catch (e) {
+      console.log(e);
+      return { error: "Не удалось полусить список пользователей" };
+    }
+  }
+
   async getById(id) {
     try {
       const user = await this._userEntity.findOne({ where: { id } });

@@ -24,6 +24,12 @@ export default class UserService {
     return { value: res.value };
   }
 
+  async getListByRole(roleId) {
+    const res = await this._userRepo.getListByRole(roleId);
+    if (res?.error) return { error: res.error };
+    return { value: res.value };
+  }
+
   async getById(id) {
     const res = await this._userRepo.getById(id);
     if (res?.error) return { error: res.error };
