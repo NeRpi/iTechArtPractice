@@ -33,8 +33,7 @@ export default class UserService {
   async getById(id) {
     const res = await this._userRepo.getById(id);
     if (res?.error) return { error: res.error };
-    else if (!res.value)
-      return { error: "Пользователь под таким id отсутствует" };
+    else if (!res.value) return { error: "There is no user under this id" };
     return { value: res.value };
   }
 
@@ -48,8 +47,7 @@ export default class UserService {
       password
     );
     if (res?.error) return { error: res.error };
-    else if (!res.value)
-      return { error: "Не удалось произвести обновление пользователя" };
+    else if (!res.value) return { error: "There is no user under this id" };
     else return { value: res.value };
   }
 
@@ -58,8 +56,7 @@ export default class UserService {
     if (res?.error) return { error: res.error };
     else if (!res.value)
       return {
-        error:
-          "Не удалось произвести удаление пользователя, пользователь под таким id отсутвует",
+        error: "There is no user under this id",
       };
     else return { value: res.value };
   }

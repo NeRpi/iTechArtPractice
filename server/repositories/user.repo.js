@@ -17,7 +17,7 @@ export default class UserRepo {
       });
       return { value: user };
     } catch (e) {
-      return { error: "Не удалось создать нового пользователя" };
+      return { error: "Failed to create a new user" };
     }
   }
 
@@ -29,7 +29,7 @@ export default class UserRepo {
       return { value: users };
     } catch (e) {
       console.log(e);
-      return { error: "Не удалось полусить список пользователей" };
+      return { error: "Failed to get a list of users" };
     }
   }
 
@@ -42,7 +42,7 @@ export default class UserRepo {
       return { value: users };
     } catch (e) {
       console.log(e);
-      return { error: "Не удалось полусить список пользователей" };
+      return { error: "Failed to get a list of users by role" };
     }
   }
 
@@ -51,7 +51,7 @@ export default class UserRepo {
       const user = await this._userEntity.findOne({ where: { id } });
       return { value: user };
     } catch (e) {
-      return { error: "Не удалось получить пользователя по id" };
+      return { error: "Failed to get user by id" };
     }
   }
 
@@ -63,7 +63,7 @@ export default class UserRepo {
       );
       return { value: res };
     } catch (e) {
-      return { error: "Не удалось обновить пользователя" };
+      return { error: "Failed to update user" };
     }
   }
 
@@ -72,7 +72,7 @@ export default class UserRepo {
       const res = await this._userEntity.destroy({ where: { id } });
       return { value: res };
     } catch (e) {
-      return { error: "Неудалось удалить пользователя" };
+      return { error: "Failed to delete user" };
     }
   }
 }

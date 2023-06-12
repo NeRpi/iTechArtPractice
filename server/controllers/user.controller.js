@@ -19,16 +19,19 @@ class UserController {
   };
 
   getList = async (req, res) => {
-    const { roleId } = req.query;
-    let result;
-    if (roleId) result = await this._userService.getListByRole(roleId);
-    else result = await this._userService.getList();
+    const result = await this._userService.getList();
     return res.json(result);
   };
 
   getById = async (req, res) => {
     const { id } = req.params;
     const result = await this._userService.getById(id);
+    return res.json(result);
+  };
+
+  getListByRole = async (req, res) => {
+    const { roleId } = req.params;
+    const result = await this._userService.getListByRole(roleId);
     return res.json(result);
   };
 

@@ -20,15 +20,14 @@ export default class RoleService {
   async getById(id) {
     const res = await this._roleRepo.getById(id);
     if (res?.error) return { error: res.error };
-    else if (!res.value) return { error: "Роли под таким id отсутствует" };
+    else if (!res.value) return { error: "There are no roles under this id" };
     return { value: res.value };
   }
 
   async updateById(id, roleName) {
     const res = await this._roleRepo.updateById(id, roleName);
     if (res?.error) return { error: res.error };
-    else if (!res.value)
-      return { error: "Не удалось произвести обновление роли" };
+    else if (!res.value) return { error: "There are no roles under this id" };
     else return { value: res.value };
   }
 
@@ -37,8 +36,7 @@ export default class RoleService {
     if (res?.error) return { error: res.error };
     else if (!res.value)
       return {
-        error:
-          "Не удалось произвести удаление роли, роли под таким id отсутвует",
+        error: "There are no roles under this id",
       };
     else return { value: res.value };
   }
