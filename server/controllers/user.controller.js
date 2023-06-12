@@ -6,19 +6,19 @@ class UserController {
   }
 
   create = async (req, res) => {
-    const { name, surname, DoB, email, password } = req.body;
+    const { name, surname, DoB, email, password, roleId } = req.body;
     const result = await this._userService.create(
       name,
       surname,
       DoB,
       email,
-      password
+      password,
+      roleId
     );
     return res.json(result);
   };
 
   getList = async (req, res) => {
-    console.log(this._userService);
     const result = await this._userService.getList();
     return res.json(result);
   };
@@ -26,6 +26,12 @@ class UserController {
   getById = async (req, res) => {
     const { id } = req.params;
     const result = await this._userService.getById(id);
+    return res.json(result);
+  };
+
+  getListByRole = async (req, res) => {
+    const { roleId } = req.params;
+    const result = await this._userService.getListByRole(roleId);
     return res.json(result);
   };
 
