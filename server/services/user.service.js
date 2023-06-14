@@ -1,5 +1,6 @@
 import UserRepo from "../repositories/user.repo.js";
 import ApiError from "../error/api.error.js";
+import bcrypt from "bcrypt";
 
 export default class UserService {
   constructor() {
@@ -7,12 +8,13 @@ export default class UserService {
   }
 
   async create(name, surname, DoB, email, password, roleId) {
+    const hashPassword = await bcrypt.hash(password, 3);
     return await this._userRepo.create(
       name,
       surname,
       DoB,
       email,
-      password,
+      hashPassword,
       roleId
     );
   }
@@ -32,13 +34,14 @@ export default class UserService {
   }
 
   async updateById(id, name, surname, DoB, email, password) {
+    const hashPassword = bcrypt.hash(password, 3);
     const res = await this._userRepo.updateById(
       id,
       name,
       surname,
       DoB,
       email,
-      password
+      hashPassword
     );
     if (!res) throw ApiError.badRequest("There is no user under this id");
     return "User updated!";
