@@ -13,7 +13,7 @@ export default class TokenService {
 
       return { accessToken, refreshToken };
     } catch (e) {
-      throw ApiError.internal("Failed generate tokens!");
+      throw ApiError.internal("Failed to generate tokens!");
     }
   }
 
