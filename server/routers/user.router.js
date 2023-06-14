@@ -1,13 +1,14 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller.js";
+import jwtMiddleware from "../middleware/jwt.middleware.js";
 
 const router = new Router();
 
-router.post("/", userController.create);
-router.get("/", userController.getList);
-router.get("/:id", userController.getById);
-router.put("/:id", userController.updateById);
-router.delete("/:id", userController.deleteById);
-router.get("/by-role/:roleId", userController.getListByRole);
+router.post("/", jwtMiddleware, userController.create);
+router.get("/", jwtMiddleware, userController.getList);
+router.get("/:id", jwtMiddleware, userController.getById);
+router.put("/:id", jwtMiddleware, userController.updateById);
+router.delete("/:id", jwtMiddleware, userController.deleteById);
+router.get("/by-role/:roleId", jwtMiddleware, userController.getListByRole);
 
 export default router;
