@@ -1,4 +1,5 @@
 import UserRepo from "../repositories/user.repo.js";
+import ApiError from "../error/api.error.js";
 
 export default class UserService {
   constructor() {
@@ -6,7 +7,7 @@ export default class UserService {
   }
 
   async create(name, surname, DoB, email, password, roleId) {
-    const res = await this._userRepo.create(
+    return await this._userRepo.create(
       name,
       surname,
       DoB,
@@ -14,27 +15,20 @@ export default class UserService {
       password,
       roleId
     );
-    if (res?.error) return { error: res.error };
-    return { value: res.value };
   }
 
   async getList() {
-    const res = await this._userRepo.getList();
-    if (res?.error) return { error: res.error };
-    return { value: res.value };
+    return await this._userRepo.getList();
   }
 
   async getListByRole(roleId) {
-    const res = await this._userRepo.getListByRole(roleId);
-    if (res?.error) return { error: res.error };
-    return { value: res.value };
+    return await this._userRepo.getListByRole(roleId);
   }
 
   async getById(id) {
     const res = await this._userRepo.getById(id);
-    if (res?.error) return { error: res.error };
-    else if (!res.value) return { error: "There is no user under this id" };
-    return { value: res.value };
+    if (!res) throw ApiError.badRequest("There is no user under this id");
+    return res;
   }
 
   async updateById(id, name, surname, DoB, email, password) {
@@ -46,18 +40,13 @@ export default class UserService {
       email,
       password
     );
-    if (res?.error) return { error: res.error };
-    else if (!res.value) return { error: "There is no user under this id" };
-    else return { value: res.value };
+    if (!res) throw ApiError.badRequest("There is no user under this id");
+    return "User updated!";
   }
 
   async deleteById(id) {
     const res = await this._userRepo.deleteById(id);
-    if (res?.error) return { error: res.error };
-    else if (!res.value)
-      return {
-        error: "There is no user under this id",
-      };
-    else return { value: res.value };
+    if (!res) throw ApiError.badRequest("There is no user under this id");
+    return "User deleted!";
   }
 }

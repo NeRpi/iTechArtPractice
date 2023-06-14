@@ -1,4 +1,5 @@
-import { User, Role } from "../db/entities/index.js";
+import { Role, User } from "../db/entities/index.js";
+import ApiError from "../error/api.error.js";
 
 export default class UserRepo {
   constructor() {
@@ -7,7 +8,7 @@ export default class UserRepo {
 
   async create(name, surname, DoB, email, password, roleId) {
     try {
-      const user = await this._userEntity.create({
+      return await this._userEntity.create({
         name,
         surname,
         DoB,
@@ -15,64 +16,62 @@ export default class UserRepo {
         password,
         roleId,
       });
-      return { value: user };
     } catch (e) {
-      return { error: "Failed to create a new user" };
+      throw ApiError.internal("Failed to create a new user");
     }
   }
 
   async getList() {
     try {
-      const users = await this._userEntity.findAll({
-        include: Role,
-      });
-      return { value: users };
+      return await this._userEntity.findAll({ include: Role });
     } catch (e) {
-      console.log(e);
-      return { error: "Failed to get a list of users" };
-    }
-  }
-
-  async getListByRole(roleId) {
-    try {
-      const users = await this._userEntity.findAll({
-        where: { roleId },
-        include: Role,
-      });
-      return { value: users };
-    } catch (e) {
-      console.log(e);
-      return { error: "Failed to get a list of users by role" };
+      throw ApiError.internal("Failed to get a list of users");
     }
   }
 
   async getById(id) {
     try {
-      const user = await this._userEntity.findOne({ where: { id } });
-      return { value: user };
+      return await this._userEntity.findOne({ where: { id } });
     } catch (e) {
-      return { error: "Failed to get user by id" };
+      throw ApiError.internal("Failed to get user by id");
+    }
+  }
+
+  async getByEmail(email) {
+    try {
+      return await this._userEntity.findOne({ where: { email } });
+    } catch (e) {
+      throw ApiError.internal("Failed to get user by email");
+    }
+  }
+
+  async getListByRole(roleId) {
+    try {
+      return await this._userEntity.findAll({
+        where: { roleId },
+        include: Role,
+      });
+    } catch (e) {
+      throw ApiError.internal("Failed to get a list of users by role");
     }
   }
 
   async updateById(id, name, surname, DoB, email, password) {
     try {
-      const res = await this._userEntity.update(
+      return await this._userEntity.update(
         { name, surname, DoB, email, password },
         { where: { id } }
       );
-      return { value: res };
     } catch (e) {
-      return { error: "Failed to update user" };
+      throw ApiError.internal("Failed to update user");
     }
   }
 
   async deleteById(id) {
     try {
-      const res = await this._userEntity.destroy({ where: { id } });
-      return { value: res };
+      return await this._userEntity.destroy({ where: { id } });
     } catch (e) {
-      return { error: "Failed to delete user" };
+      throw ApiError.internal("Failed to delete user");
     }
   }
 }

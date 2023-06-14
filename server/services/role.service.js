@@ -1,4 +1,5 @@
 import RoleRepo from "../repositories/role.repo.js";
+import ApiError from "../error/api.error.js";
 
 export default class RoleService {
   constructor() {
@@ -6,38 +7,28 @@ export default class RoleService {
   }
 
   async create(roleName) {
-    const res = await this._roleRepo.create(roleName);
-    if (res?.error) return { error: res.error };
-    return { value: res.value };
+    return await this._roleRepo.create(roleName);
   }
 
   async getList() {
-    const res = await this._roleRepo.getList();
-    if (res?.error) return { error: res.error };
-    return { value: res.value };
+    return await this._roleRepo.getList();
   }
 
   async getById(id) {
     const res = await this._roleRepo.getById(id);
-    if (res?.error) return { error: res.error };
-    else if (!res.value) return { error: "There are no roles under this id" };
-    return { value: res.value };
+    if (!res) throw ApiError.badRequest("There are no roles under this id");
+    return res;
   }
 
   async updateById(id, roleName) {
     const res = await this._roleRepo.updateById(id, roleName);
-    if (res?.error) return { error: res.error };
-    else if (!res.value) return { error: "There are no roles under this id" };
-    else return { value: res.value };
+    if (!res) throw ApiError.badRequest("There are no roles under this id");
+    else return res;
   }
 
   async deleteById(id) {
     const res = await this._roleRepo.deleteById(id);
-    if (res?.error) return { error: res.error };
-    else if (!res.value)
-      return {
-        error: "There are no roles under this id",
-      };
-    else return { value: res.value };
+    if (!res) throw ApiError.badRequest("There are no roles under this id");
+    else return res;
   }
 }
