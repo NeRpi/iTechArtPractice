@@ -44,7 +44,7 @@ export default class UserService {
       hashPassword
     );
     if (!res) throw ApiError.badRequest("There is no user under this id");
-    return "User updated!";
+    return await this._userRepo.getById(id);
   }
 
   async deleteById(id) {
