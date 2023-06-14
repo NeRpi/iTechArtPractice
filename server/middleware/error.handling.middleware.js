@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 
-const errorHandlingMiddleware = (err, req, res) => {
+const errorHandlingMiddleware = (err, req, res, next) => {
   if (err instanceof ApiError) {
     return res.status(err.status).json({ message: err.message });
   }
