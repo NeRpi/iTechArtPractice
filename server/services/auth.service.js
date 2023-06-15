@@ -1,7 +1,7 @@
 import UserRepo from "../repositories/user.repo.js";
-import bcrypt from "bcrypt";
 import ApiError from "../error/api.error.js";
 import TokenService from "./token.service.js";
+import { hash, compare } from "../utils/bcrypt.util.js";
 
 export default class AuthService {
   constructor() {
@@ -12,7 +12,7 @@ export default class AuthService {
   async registration(email, password) {
     if (await this._userRepo.getByEmail(email))
       throw ApiError.internal("The mail is already registered");
-    const hashPassword = await bcrypt.hash(password, 3);
+    const hashPassword = await hash(password);
     const user = await this._userRepo.create(
       null,
       null,
@@ -28,7 +28,7 @@ export default class AuthService {
   async login(email, password) {
     const user = await this._userRepo.getByEmail(email);
     if (!user) throw ApiError.internal("The user is not registered");
-    const isPassEquals = await bcrypt.compare(password, user.password);
+    const isPassEquals = await compare(password, user.password);
     if (!isPassEquals) throw ApiError.badRequest("Invalid email or password");
 
     return this.generateToken(user);

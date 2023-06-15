@@ -1,6 +1,6 @@
 import UserRepo from "../repositories/user.repo.js";
 import ApiError from "../error/api.error.js";
-import bcrypt from "bcrypt";
+import { hash } from "../utils/bcrypt.util.js";
 
 export default class UserService {
   constructor() {
@@ -8,7 +8,7 @@ export default class UserService {
   }
 
   async create(name, surname, DoB, email, password, roleId) {
-    const hashPassword = await bcrypt.hash(password, 3);
+    const hashPassword = await hash(password);
     return await this._userRepo.create(
       name,
       surname,
@@ -34,7 +34,7 @@ export default class UserService {
   }
 
   async updateById(id, name, surname, DoB, email, password) {
-    const hashPassword = bcrypt.hash(password, 3);
+    const hashPassword = hash(password);
     const res = await this._userRepo.updateById(
       id,
       name,
