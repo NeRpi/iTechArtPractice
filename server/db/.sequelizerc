@@ -1,9 +1,0 @@
-require("babel-register");
-
-const path = require('path');
-
-module.exports = {
-  'models-path': path.resolve('entities'),
-  'seeders-path': path.resolve('consts'),
-  'migrations-path': path.resolve('migrations')
-}
