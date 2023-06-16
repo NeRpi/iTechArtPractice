@@ -1,35 +1,41 @@
-version: '1.0'
+version: '3.7'
 
 services:
-  main:
-    container_name: main
-    build:
-      context: .
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - 5000:5000
-    command: npm start
-    depends_on:
-      - postgres
+  db:
+    container_name: db
+    image: postgres:12.4-alpine
     restart: always
-  postgres:
-    container_name: postgres
-    image: postgres:latest
-    env_file:
-      - .env
     environment:
-      PG_DATA: /var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1111
+      POSTGRES_DB: iTechArt
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
+
+  adminer:
+    container_name: adminer
+    image: adminer:4.7.8
+    restart: always
+    ports:
+      - 5051:8080
+
+  ADW-MINIO-DEV:
+    container_name: minio
+    image: minio/minio
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - minio_storage:/data
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: minio123
+    command: server --console-address ":9001" /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
     restart: always
 
 volumes:
-  pgdata:
-
-
+  pgdata: {}
+  minio_storage: {}
