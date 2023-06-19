@@ -1,36 +1,12 @@
 import ApiError from "../error/api.error.js";
 import { UserEntity } from "../db/entities/user.entity.js";
 import dbConnector from "../db/db.connector.js";
+import { UserDto } from "../dto/user.dto.js";
 
 export const UserRepo = dbConnector.getRepository(UserEntity).extend({
-  async createUser(
-    name: string,
-    surname: string,
-    DoB: string,
-    email: string,
-    password: string,
-    roleId: string
-  ) {
+  async createUser(userDto: UserDto) {
     try {
-      const user = await this.create({
-        name,
-        surname,
-        DoB,
-        email,
-        password,
-        roleId,
-      });
-
-      await this.save(user);
-      return user;
-    } catch (e) {
-      throw ApiError.internal("Failed to create a new user");
-    }
-  },
-
-  async registrationUser(email: string, password: string) {
-    try {
-      const user = await this.create({ email, password });
+      const user = await this.create({ ...userDto });
       await this.save(user);
       return user;
     } catch (e) {
@@ -71,16 +47,9 @@ export const UserRepo = dbConnector.getRepository(UserEntity).extend({
     }
   },
 
-  async updateById(
-    id: string,
-    name: string,
-    surname: string,
-    DoB: string,
-    email: string,
-    password: string
-  ) {
+  async updateById(userDto: UserDto) {
     try {
-      return await this.update(id, { name, surname, DoB, email, password });
+      return await this.update(userDto.id!, { ...userDto });
     } catch (e) {
       throw ApiError.internal("Failed to update user");
     }

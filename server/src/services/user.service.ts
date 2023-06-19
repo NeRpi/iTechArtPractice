@@ -1,64 +1,43 @@
 import { UserRepo } from "../repositories/user.repo.js";
 import ApiError from "../error/api.error.js";
 import { BcryptUtil } from "../utils/bcrypt.util.js";
+import { UserDto } from "../dto/user.dto.js";
 
 export default class UserService {
-  async create(
-    name: string,
-    surname: string,
-    DoB: string,
-    email: string,
-    password: string,
-    roleId: string
-  ) {
-    const hashPassword = await BcryptUtil.hash(password);
-    return await UserRepo.createUser(
-      name,
-      surname,
-      DoB,
-      email,
-      hashPassword,
-      roleId
-    );
+  private userRepo;
+
+  constructor() {
+    this.userRepo = UserRepo;
+  }
+
+  async create(userDto: UserDto) {
+    userDto.password = await BcryptUtil.hash(userDto.password);
+    return await this.userRepo.createUser(userDto);
   }
 
   async getList() {
-    return await UserRepo.getList();
+    return await this.userRepo.getList();
   }
 
   async getListByRole(roleId: string) {
-    return await UserRepo.getListByRole(roleId);
+    return await this.userRepo.getListByRole(roleId);
   }
 
   async getById(id: string) {
-    const res = await UserRepo.getById(id);
+    const res = await this.userRepo.getById(id);
     if (!res) throw ApiError.badRequest("There is no user under this id");
     return res;
   }
 
-  async updateById(
-    id: string,
-    name: string,
-    surname: string,
-    DoB: string,
-    email: string,
-    password: string
-  ) {
-    const hashPassword = await BcryptUtil.hash(password);
-    const res = await UserRepo.updateById(
-      id,
-      name,
-      surname,
-      DoB,
-      email,
-      hashPassword
-    );
+  async updateById(userDto: UserDto) {
+    userDto.password = await BcryptUtil.hash(userDto.password);
+    const res = await this.userRepo.updateById({ ...userDto });
     if (!res) throw ApiError.badRequest("There is no user under this id");
-    return await UserRepo.getById(id);
+    return await this.userRepo.getById(userDto.id!);
   }
 
   async deleteById(id: string) {
-    const res = await UserRepo.deleteById(id);
+    const res = await this.userRepo.deleteById(id);
     if (!res) throw ApiError.badRequest("There is no user under this id");
     return "User deleted!";
   }

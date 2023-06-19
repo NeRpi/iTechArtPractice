@@ -2,16 +2,16 @@ import RoleService from "../services/role.service.js";
 import { Request, Response, NextFunction } from "express";
 
 class RoleController {
-  _roleService: RoleService;
+  private roleService: RoleService;
 
   constructor() {
-    this._roleService = new RoleService();
+    this.roleService = new RoleService();
   }
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { role } = req.body;
-      const result = await this._roleService.create(role);
+      const result = await this.roleService.create(role);
       return res.json(result);
     } catch (e) {
       next(e);
@@ -20,7 +20,7 @@ class RoleController {
 
   getList = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this._roleService.getList();
+      const result = await this.roleService.getList();
       return res.json(result);
     } catch (e) {
       next(e);
@@ -30,7 +30,7 @@ class RoleController {
   getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const result = await this._roleService.getById(id);
+      const result = await this.roleService.getById(id);
       return res.json(result);
     } catch (e) {
       next(e);
@@ -41,7 +41,7 @@ class RoleController {
     try {
       const { id } = req.params;
       const { role } = req.body;
-      const result = await this._roleService.updateById(id, role);
+      const result = await this.roleService.updateById(id, role);
       return res.json(result);
     } catch (e) {
       next(e);
@@ -51,7 +51,7 @@ class RoleController {
   deleteById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const result = await this._roleService.deleteById(id);
+      const result = await this.roleService.deleteById(id);
       return res.json(result);
     } catch (e) {
       next(e);

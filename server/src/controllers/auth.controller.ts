@@ -2,16 +2,16 @@ import AuthService from "../services/auth.service.js";
 import { Request, Response, NextFunction } from "express";
 
 class AuthController {
-  _authService: AuthService;
+  private authService: AuthService;
 
   constructor() {
-    this._authService = new AuthService();
+    this.authService = new AuthService();
   }
 
   registration = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
-      const userData = await this._authService.registration(email, password);
+      const userData = await this.authService.registration(email, password);
       res.cookie("refreshToken", userData.refreshToken, { httpOnly: true });
       return res.json(userData);
     } catch (e) {
@@ -22,7 +22,7 @@ class AuthController {
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
-      const userData = await this._authService.login(email, password);
+      const userData = await this.authService.login(email, password);
       res.cookie("refreshToken", userData.refreshToken, { httpOnly: true });
       return res.json(userData);
     } catch (e) {
@@ -42,7 +42,7 @@ class AuthController {
   refresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { refreshToken } = req.cookies;
-      const userData = await this._authService.refresh(refreshToken);
+      const userData = await this.authService.refresh(refreshToken);
       res.cookie("refreshToken", userData.refreshToken, { httpOnly: true });
       return res.json(userData);
     } catch (e) {
