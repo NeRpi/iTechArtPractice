@@ -1,9 +1,9 @@
-import { UserRepo } from "../repositories/user.repo.js";
-import ApiError from "../error/api.error.js";
-import TokenService from "./token.service.js";
-import { BcryptUtil } from "../utils/bcrypt.util.js";
-import { UserEntity } from "../db/entities/user.entity.js";
-import { UserDto } from "../dto/user.dto.js";
+import { UserRepo } from "../repositories/user.repo.ts";
+import ApiError from "../error/api.error.ts";
+import TokenService from "./token.service.ts";
+import { BcryptUtil } from "../utils/bcrypt.util.ts";
+import { UserEntity } from "../db/entities/user.entity.ts";
+import { UserDto } from "../dto/user.dto.ts";
 
 export default class AuthService {
   private tokenService;

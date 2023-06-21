@@ -1,7 +1,7 @@
-import UserService from "../services/user.service.js";
-import MinioService from "../services/minio.service.js";
+import UserService from "../services/user.service.ts";
+import MinioService from "../services/minio.service.ts";
 import { Request, Response, NextFunction } from "express";
-import { UserDto } from "../dto/user.dto.js";
+import { UserDto } from "../dto/user.dto.ts";
 import path from "path";
 
 class UserController {

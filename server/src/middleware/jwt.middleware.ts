@@ -1,5 +1,5 @@
-import ApiError from "../error/api.error.js";
-import TokenService from "../services/token.service.js";
+import ApiError from "../error/api.error.ts";
+import TokenService from "../services/token.service.ts";
 import { NextFunction, Request, Response } from "express";
 
 const tokenService = new TokenService();

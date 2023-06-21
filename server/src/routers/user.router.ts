@@ -1,6 +1,6 @@
 import { Router } from "express";
-import userController from "../controllers/user.controller.js";
-import jwtMiddleware from "../middleware/jwt.middleware.js";
+import userController from "../controllers/user.controller.ts";
+import jwtMiddleware from "../middleware/jwt.middleware.ts";
 import multer from "multer";
 
 const router = Router();

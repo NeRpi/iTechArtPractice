@@ -1,4 +1,4 @@
-import ApiError from "../error/api.error.js";
+import ApiError from "../error/api.error.ts";
 import { Request, Response, NextFunction } from "express";
 
 const errorHandlingMiddleware = (

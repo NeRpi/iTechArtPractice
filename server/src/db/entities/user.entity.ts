@@ -1,6 +1,6 @@
 import { Entity, DeleteDateColumn, Column, ManyToOne } from "typeorm";
-import { BaseEntity } from "./base.entity.js";
-import { RoleEntity } from "./role.entity.js";
+import { BaseEntity } from "./base.entity.ts";
+import { RoleEntity } from "./role.entity.ts";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {

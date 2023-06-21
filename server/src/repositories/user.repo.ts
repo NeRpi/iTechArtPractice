@@ -1,7 +1,7 @@
-import ApiError from "../error/api.error.js";
-import { UserEntity } from "../db/entities/user.entity.js";
-import dbConnector from "../db/db.connector.js";
-import { UserDto } from "../dto/user.dto.js";
+import ApiError from "../error/api.error.ts";
+import { UserEntity } from "../db/entities/user.entity.ts";
+import dbConnector from "../db/db.connector.ts";
+import { UserDto } from "../dto/user.dto.ts";
 
 export const UserRepo = dbConnector.getRepository(UserEntity).extend({
   async createUser(userDto: UserDto) {

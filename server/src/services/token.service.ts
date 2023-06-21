@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import ApiError from "../error/api.error.js";
+import ApiError from "../error/api.error.ts";
 
 export default class TokenService {
   generateTokens(payload: object) {

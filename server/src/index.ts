@@ -2,8 +2,8 @@ import "dotenv/config";
 import express, { Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import routers from "./routers/index.js";
-import errorHandlingMiddleware from "./middleware/error.handling.middleware.js";
+import routers from "./routers/index.ts";
+import errorHandlingMiddleware from "./middleware/error.handling.middleware.ts";
 
 const PORT = process.env.PORT || 5000;
 const app: Express = express();

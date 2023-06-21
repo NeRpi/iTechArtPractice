@@ -1,5 +1,5 @@
-import { RoleRepo } from "../repositories/role.repo.js";
-import ApiError from "../error/api.error.js";
+import { RoleRepo } from "../repositories/role.repo.ts";
+import ApiError from "../error/api.error.ts";
 
 export default class RoleService {
   private roleRepo;

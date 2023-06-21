@@ -1,4 +1,4 @@
-import RoleService from "../services/role.service.js";
+import RoleService from "../services/role.service.ts";
 import { Request, Response, NextFunction } from "express";
 
 class RoleController {

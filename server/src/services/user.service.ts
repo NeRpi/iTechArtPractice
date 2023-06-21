@@ -1,7 +1,7 @@
-import { UserRepo } from "../repositories/user.repo.js";
-import ApiError from "../error/api.error.js";
-import { BcryptUtil } from "../utils/bcrypt.util.js";
-import { UserDto } from "../dto/user.dto.js";
+import { UserRepo } from "../repositories/user.repo.ts";
+import ApiError from "../error/api.error.ts";
+import { BcryptUtil } from "../utils/bcrypt.util.ts";
+import { UserDto } from "../dto/user.dto.ts";
 import { stringify, parse } from "csv";
 import fs from "fs";
 

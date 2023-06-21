@@ -1,6 +1,6 @@
-import { RoleEntity } from "../db/entities/role.entity.js";
-import ApiError from "../error/api.error.js";
-import dbConnector from "../db/db.connector.js";
+import { RoleEntity } from "../db/entities/role.entity.ts";
+import ApiError from "../error/api.error.ts";
+import dbConnector from "../db/db.connector.ts";
 
 export const RoleRepo = dbConnector.getRepository(RoleEntity).extend({
   async createRole(roleName: string) {
