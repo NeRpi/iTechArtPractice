@@ -6,11 +6,21 @@ import { UserDto } from "../dto/user.dto.js";
 export const UserRepo = dbConnector.getRepository(UserEntity).extend({
   async createUser(userDto: UserDto) {
     try {
-      const user = await this.create({ ...userDto });
+      const user = this.create(userDto);
       await this.save(user);
       return user;
     } catch (e) {
       throw ApiError.internal("Failed to create a new user");
+    }
+  },
+
+  async createUsers(usersDto: UserDto[]) {
+    try {
+      const users = this.create(usersDto);
+      await this.save(users);
+      return users;
+    } catch (e) {
+      throw ApiError.internal("Failed to create a new users");
     }
   },
 
