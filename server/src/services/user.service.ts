@@ -55,7 +55,7 @@ export default class UserService {
   }
 
   async importUsers(pathToFile: string) {
-    const promise = new Promise<UserDto[]>((resolve, reject) => {
+    const promise = new Promise<UserDto[]>((resolve) => {
       const usersDto: UserDto[] = [];
       fs.createReadStream(pathToFile)
         .pipe(this.parser)
@@ -78,7 +78,7 @@ export default class UserService {
     users.forEach((userEntity) => stringifier.write(Object.values(userEntity)));
     stringifier.end();
 
-    const promise = new Promise<string>((resolve, reject) => {
+    const promise = new Promise<string>((resolve) => {
       stringifier.pipe(writableStream).on("finish", () => {
         writableStream.end();
         resolve("src/statics/users.csv");
