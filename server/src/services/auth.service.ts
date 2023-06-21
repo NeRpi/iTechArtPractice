@@ -44,7 +44,7 @@ export default class AuthService {
 
   generateToken(userDto: UserEntity) {
     const payload = {
-      userId: userDto.id,
+      id: userDto.id,
       roleId: userDto.roleId,
     };
 
