@@ -68,7 +68,9 @@ export default class UserService {
 
   async exportUsers() {
     const users = await this.userRepo.getList();
-    const writableStream = fs.createWriteStream("src/statics/users.csv");
+    const writableStream = fs.createWriteStream(
+      "src/statics/users.export." + Date.now() + ".csv"
+    );
     const stringifier = stringify({
       header: true,
       columns: Object.keys(new UserDto({})),
@@ -81,7 +83,7 @@ export default class UserService {
     const promise = new Promise<string>((resolve) => {
       stringifier.pipe(writableStream).on("finish", () => {
         writableStream.end();
-        resolve("src/statics/users.csv");
+        resolve(writableStream.path as string);
       });
     });
 
