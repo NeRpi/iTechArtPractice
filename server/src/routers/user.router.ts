@@ -1,6 +1,7 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller.ts";
 import jwtMiddleware from "../middleware/jwt.middleware.ts";
+import verifyIsSuperAdmin from "../middleware/verify.is.super.admin.middleware.js";
 import multer from "multer";
 
 const router = Router();
@@ -17,6 +18,7 @@ const upload = multer({ storage: storage });
 router.post(
   "/import",
   jwtMiddleware,
+  verifyIsSuperAdmin,
   upload.single("users"),
   userController.importUsers
 );
