@@ -1,4 +1,4 @@
-// https://leetcode.com/problems/summary-ranges/
+//https://leetcode.com/problems/summary-ranges/
 
 // You are given a sorted unique integer array nums.
 //
@@ -12,7 +12,6 @@
 //
 //      "a->b" if a != b
 //      "a" if a == b
-
 
 /**
  * @param {number[]} nums
