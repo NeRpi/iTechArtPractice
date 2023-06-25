@@ -17,7 +17,7 @@ const jwtMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const userData = tokenService.validateAccessToken(accessToken);
     if (!userData) return next(ApiError.unauthorized("The token is not valid"));
 
-    req.user = new UserDto(userData);
+    req.user = new UserDto({ id: userData.userId, roleId: userData.roleId });
     next();
   } catch (e) {
     return next(ApiError.unauthorized("The user is not logged in"));

@@ -29,8 +29,8 @@ export default class AuthService {
     if (!user) throw ApiError.internal("The user is not registered");
     const isPassEquals = await BcryptUtil.compare(password, user.password);
     if (!isPassEquals) throw ApiError.badRequest("Invalid email or password");
-
-    return this.generateToken(user);
+    const userDto = new UserDto(user);
+    return this.generateToken(userDto);
   }
 
   async refresh(refreshToken: string) {
@@ -38,13 +38,13 @@ export default class AuthService {
     const userData = this.tokenService.validateRefreshToken(refreshToken);
     if (!userData) throw ApiError.unauthorized("The user is not logged in");
     const user = await this.userRepo.getById(userData.userId);
-
-    return this.generateToken(user!);
+    const userDto = new UserDto(user);
+    return this.generateToken(userDto);
   }
 
-  generateToken(userDto: UserEntity) {
+  generateToken(userDto: UserDto) {
     const payload = {
-      id: userDto.id,
+      userId: userDto.id,
       roleId: userDto.roleId,
     };
 
