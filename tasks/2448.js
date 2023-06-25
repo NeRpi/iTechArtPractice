@@ -21,13 +21,13 @@ var minCost = function (nums, cost) {
     pairArray.sort((a, b) => a[0] - b[0]);
     let left = 0;
     let right = pairArray.length - 1;
-    let resultCost = 0
+    let resultCost = 0;
     while (left !== right) {
         if (pairArray[left][1] < pairArray[right][1]) {
             resultCost += pairArray[left][1] * (pairArray[left + 1][0] - pairArray[left][0]);
             pairArray[left + 1][1] += pairArray[left++][1];
         } else {
-            resultCost += pairArray[right][1] * (pairArray[right][0] - pairArray[right - 1][0])
+            resultCost += pairArray[right][1] * (pairArray[right][0] - pairArray[right - 1][0]);
             pairArray[right - 1][1] += pairArray[right--][1];
         }
     }
