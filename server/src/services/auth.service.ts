@@ -2,7 +2,6 @@ import { UserRepo } from "../repositories/user.repo.ts";
 import ApiError from "../error/api.error.ts";
 import TokenService from "./token.service.ts";
 import { BcryptUtil } from "../utils/bcrypt.util.ts";
-import { UserEntity } from "../db/entities/user.entity.ts";
 import { UserDto } from "../dto/user.dto.ts";
 
 export default class AuthService {
