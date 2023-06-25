@@ -9,7 +9,7 @@ export default class RoleService {
     this.roleRepo = RoleRepo;
   }
 
-  async create(role: Roles) {
+  async create(role: string) {
     return await this.roleRepo.createRole(role);
   }
 
