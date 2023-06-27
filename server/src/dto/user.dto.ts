@@ -6,6 +6,7 @@ export class UserDto {
   email: string;
   password: string;
   roleId?: string;
+  deleted_at?: Date;
 
   constructor(data: any) {
     ({
@@ -16,6 +17,7 @@ export class UserDto {
       email: this.email,
       password: this.password,
       roleId: this.roleId,
+      deleted_at: this.deleted_at
     } = data);
   }
 }
