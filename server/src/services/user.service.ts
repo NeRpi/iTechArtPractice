@@ -23,6 +23,7 @@ export default class UserService {
   }
 
   async create(userDto: UserDto) {
+    if (!userDto.password) throw ApiError.badRequest("Password required field!");
     userDto.password = await BcryptUtil.hash(userDto.password);
     return await this.userRepo.createUser(userDto);
   }
@@ -42,15 +43,14 @@ export default class UserService {
   }
 
   async updateById(userDto: UserDto) {
+    if (!userDto.password) throw ApiError.badRequest("Password required field!");
     userDto.password = await BcryptUtil.hash(userDto.password);
-    const res = await this.userRepo.updateById({ ...userDto });
-    if (!res) throw ApiError.badRequest("There is no user under this id");
+    await this.userRepo.updateById({ ...userDto });
     return await this.userRepo.getById(userDto.id!);
   }
 
   async deleteById(id: string) {
-    const res = await this.userRepo.deleteById(id);
-    if (!res) throw ApiError.badRequest("There is no user under this id");
+    await this.userRepo.deleteById(id);
     return "User deleted!";
   }
 
