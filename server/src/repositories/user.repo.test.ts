@@ -96,7 +96,6 @@ describe("User repository", () => {
     });
 
     it("should return empty array", async () => {
-      const users = await userRepo.getList();
       expect((await userRepo.getListByRole("5")).length).toBe(0);
       expect(userRepo.find).toHaveBeenCalledWith({ relations: { role: true }, where: { roleId: "5" } });
     });
