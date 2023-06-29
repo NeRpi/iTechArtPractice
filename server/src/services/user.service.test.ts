@@ -9,8 +9,15 @@ import UserService from "./user.service.ts";
 
 describe("User service", () => {
   const userService = new UserService();
+  let baseUsers: UserDto[];
 
   beforeEach(async () => {
+    baseUsers = [
+      new UserDto({ id: "1", email: "email1", roleId: "1" }),
+      new UserDto({ id: "2", email: "email2", roleId: "1" }),
+      new UserDto({ id: "3", email: "email3", roleId: "2" }),
+      new UserDto({ id: "4", email: "email4", roleId: "3" })
+    ];
     await UserRepo.clear();
   });
 
@@ -20,34 +27,18 @@ describe("User service", () => {
 
     it("should return new user", async () => {
       expect(await userService.create(newUser)).toEqual(newUser as UserEntity);
-      expect(await userService.getList()).toEqual([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" }),
-        newUser
-      ]);
+      expect(await userService.getList()).toEqual([...baseUsers, newUser]);
     });
 
     it("should throw ApiError", async () => {
       await expect(userService.create(invalidNewUser)).rejects.toThrow(ApiError);
-      expect(await userService.getList()).toEqual([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(await userService.getList()).toEqual(baseUsers);
     });
   });
 
   describe("getList", () => {
-      it("should return all users", async () => {
-        expect(await userService.getList()).toEqual([
-          new UserDto({ id: "1", email: "email1", roleId: "1" }),
-          new UserDto({ id: "2", email: "email2", roleId: "1" }),
-          new UserDto({ id: "3", email: "email3", roleId: "2" }),
-          new UserDto({ id: "4", email: "email4", roleId: "3" })
-        ]);
+    it("should return all users", async () => {
+      expect(await userService.getList()).toEqual(baseUsers);
     });
   });
 
@@ -77,45 +68,27 @@ describe("User service", () => {
 
     it("should update values with id = 4", async () => {
       expect(await userService.updateById(updateUser)).toEqual(updateUser as UserEntity);
-      expect(await userService.getList()).toEqual([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        updateUser
-      ]);
+      baseUsers[3] = updateUser;
+      expect(await userService.getList()).toEqual(baseUsers);
     });
 
     it("should return bad update result", async () => {
       let updateUser = new UserDto({ id: "5", email: "email5", roleId: "5" });
       await expect(userService.updateById(updateUser)).rejects.toThrow(ApiError);
-      expect(await userService.getList()).toEqual([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(await userService.getList()).toEqual(baseUsers);
     });
   });
 
   describe("deleteById", () => {
     it("should return values with roleId = 1", async () => {
       expect(await userService.deleteById("1")).toEqual("User deleted!");
-      expect(await userService.getList()).toEqual([
-        new UserDto({ id: "1", email: "email1", roleId: "1", deleted_at: new Date("July 1, 2023, 12:00:00") }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      baseUsers[0] = {...baseUsers[0], deleted_at: new Date("July 1, 2023, 12:00:00")};
+      expect(await userService.getList()).toEqual(baseUsers);
     });
 
     it("should return empty array", async () => {
       await expect(userService.deleteById("5")).rejects.toThrow(ApiError);
-      expect(await userService.getList()).toEqual([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(await userService.getList()).toEqual(baseUsers);
     });
   });
 });

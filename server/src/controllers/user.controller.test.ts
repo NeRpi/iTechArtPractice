@@ -24,10 +24,19 @@ const mockResponse = () => {
 
 describe("User controller", () => {
   let req: any, res: any, next: any;
+  let baseUsers: UserDto[];
+
   beforeEach(async () => {
     req = mockRequest();
     res = mockResponse();
     next = jest.fn();
+
+    baseUsers = [
+      new UserDto({ id: "1", email: "email1", roleId: "1" }),
+      new UserDto({ id: "2", email: "email2", roleId: "1" }),
+      new UserDto({ id: "3", email: "email3", roleId: "2" }),
+      new UserDto({ id: "4", email: "email4", roleId: "3" })
+    ];
     await UserRepo.clear();
   });
 
@@ -46,13 +55,7 @@ describe("User controller", () => {
       expect(getUser).toEqual(newUser as UserEntity);
 
       await userController.getList(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" }),
-        newUser
-      ]);
+      expect(res.json).toHaveBeenCalledWith([...baseUsers, newUser]);
     });
 
     it("should throw ApiError", async () => {
@@ -62,12 +65,7 @@ describe("User controller", () => {
       expect(res.json).not.toHaveBeenCalled();
 
       await userController.getList(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(res.json).toHaveBeenCalledWith(baseUsers);
     });
   });
 
@@ -75,12 +73,7 @@ describe("User controller", () => {
     it("should return all users", async () => {
       await userController.getList(req, res, next);
 
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(res.json).toHaveBeenCalledWith(baseUsers);
     });
   });
 
@@ -102,10 +95,7 @@ describe("User controller", () => {
     it("should return values with roleId = 1", async () => {
       req.params.roleId = "1";
       await userController.getListByRole(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" })
-      ]);
+      expect(res.json).toHaveBeenCalledWith(baseUsers.slice(0, 2));
     });
 
     it("should return empty array", async () => {
@@ -128,12 +118,8 @@ describe("User controller", () => {
       expect(getUser).toEqual(updateUser as UserEntity);
 
       await userController.getList(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        updateUser
-      ]);
+      baseUsers[3] = updateUser;
+      expect(res.json).toHaveBeenCalledWith(baseUsers);
     });
 
     it("should throw ApiError('Failed to update user')", async () => {
@@ -144,12 +130,7 @@ describe("User controller", () => {
       expect(res.json).not.toHaveBeenCalled();
 
       await userController.getList(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(res.json).toHaveBeenCalledWith(baseUsers);
     });
 
     it("should throw ApiError('Password required field!')", async () => {
@@ -160,12 +141,7 @@ describe("User controller", () => {
       expect(res.json).not.toHaveBeenCalled();
 
       await userController.getList(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(res.json).toHaveBeenCalledWith(baseUsers);
     });
   });
 
@@ -178,12 +154,8 @@ describe("User controller", () => {
       expect(res.json).toHaveBeenCalledWith("User deleted!");
 
       await userController.getList(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1", deleted_at: new Date("July 1, 2023, 12:00:00") }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      baseUsers[0] = {...baseUsers[0], deleted_at: new Date("July 1, 2023, 12:00:00")};
+      expect(res.json).toHaveBeenCalledWith(baseUsers);
     });
 
     it("should return empty array", async () => {
@@ -194,12 +166,7 @@ describe("User controller", () => {
       expect(next).toHaveBeenCalledWith(ApiError.badRequest("Failed to delete user"));
 
       await userController.getList(req, res, next);
-      expect(res.json).toHaveBeenCalledWith([
-        new UserDto({ id: "1", email: "email1", roleId: "1" }),
-        new UserDto({ id: "2", email: "email2", roleId: "1" }),
-        new UserDto({ id: "3", email: "email3", roleId: "2" }),
-        new UserDto({ id: "4", email: "email4", roleId: "3" })
-      ]);
+      expect(res.json).toHaveBeenCalledWith(baseUsers);
     });
   });
 });
