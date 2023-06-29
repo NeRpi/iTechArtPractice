@@ -6,13 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "npx nodemon",
+    "build": "rimraf ./build && npx tsc",
+    "start": "npm run build && node build/index",
     "lint": "npx eslint ./src",
     "format": "npx eslint ./src --fix",
     "typeorm": "typeorm-ts-node-esm",
     "migration:generate": "cross-var npm run typeorm migration:generate -- src/db/migrations/$npm_config_name -d src/db/db.connector.ts",
     "migration:create": "cross-var npm run typeorm migration:create -- ./src/db/migrations/$npm_config_name",
     "seed:create": "cross-var npm run typeorm migration:create -- ./src/db/consts/$npm_config_name",
-    "migration:run": "npm run typeorm migration:run -- -d src/db/db.connector.ts",
+    "migration:run": "npm run build && npm run typeorm migration:run -- -d src/db/db.connector.ts",
     "migration:revert": "npm run typeorm migration:revert -- -d src/db/db.connector.ts"
   },
   "keywords": [],

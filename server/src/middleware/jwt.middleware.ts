@@ -1,7 +1,6 @@
 import ApiError from "../error/api.error.ts";
 import TokenService from "../services/token.service.ts";
 import { NextFunction, Request, Response } from "express";
-import { UserDto } from "../dto/user.dto.js";
 
 const tokenService = new TokenService();
 const jwtMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +16,7 @@ const jwtMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const userData = tokenService.validateAccessToken(accessToken);
     if (!userData) return next(ApiError.unauthorized("The token is not valid"));
 
-    req.user = new UserDto({ id: userData.userId, roleId: userData.roleId });
+    // req.user = userData;
     next();
   } catch (e) {
     return next(ApiError.unauthorized("The user is not logged in"));

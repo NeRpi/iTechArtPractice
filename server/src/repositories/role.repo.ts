@@ -1,13 +1,10 @@
 import { RoleEntity } from "../db/entities/role.entity.ts";
 import ApiError from "../error/api.error.ts";
-import { Roles } from "../db/enums/role.enum.js";
 import dbConnector from "../db/db.connector.ts";
 
 export const RoleRepo = dbConnector.getRepository(RoleEntity).extend({
   async createRole(roleName: string) {
     try {
-      await this.query(`ALTER TYPE "public"."roles_role_enum" ADD VALUE '${roleName}'`);
-      // @ts-ignore
       const role = await this.create({ role: roleName });
       await this.save(role);
       return role;
@@ -32,7 +29,7 @@ export const RoleRepo = dbConnector.getRepository(RoleEntity).extend({
     }
   },
 
-  async updateById(id: string, role: Roles) {
+  async updateById(id: string, role: string) {
     try {
       return await this.update(id, { role });
     } catch (e) {

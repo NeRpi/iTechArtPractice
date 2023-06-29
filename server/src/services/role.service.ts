@@ -1,6 +1,5 @@
 import { RoleRepo } from "../repositories/role.repo.ts";
 import ApiError from "../error/api.error.ts";
-import { Roles } from "../db/enums/role.enum.js";
 
 export default class RoleService {
   private roleRepo;
@@ -23,7 +22,7 @@ export default class RoleService {
     return res;
   }
 
-  async updateById(id: string, role: Roles) {
+  async updateById(id: string, role: string) {
     const res = await this.roleRepo.updateById(id, role);
     if (!res) throw ApiError.badRequest("There are no roles under this id");
     else return res;
