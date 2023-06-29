@@ -17,16 +17,14 @@
  * @param {number[]} nums
  * @return {string[]}
  */
-var summaryRanges = function (nums) {
-    let result = [];
-    let f = nums.at(0);
-    for (let i = 0; i < nums.length; i++) {
-        if (nums.at(i) !== nums.at(i + 1) - 1) {
-            if (f !== nums.at(i)) result.push(`${f}->${nums.at(i)}`)
-            else result.push(`${nums.at(i)}`);
-            f = nums.at(i + 1);
-        }
-    }
 
-    return result;
+var summaryRanges = function (nums) {
+    return nums.reduce((accumulator, value, currentIndex, array) => {
+        if (value + 1 !== array[currentIndex + 1]) {
+            if (accumulator.at(-1) !== value) accumulator.push(`${accumulator.pop()}->${value}`)
+            else accumulator.push(`${accumulator.pop()}`);
+            accumulator.push(array[currentIndex + 1]);
+        }
+        return accumulator;
+    }, [nums[0]]).slice(0, -1);
 };
