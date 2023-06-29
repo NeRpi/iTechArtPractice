@@ -1,209 +1,158 @@
-import { UserRepo } from "./user.repo.ts";
-import { UserDto } from "../dto/user.dto.ts";
-import { UserEntity } from "../db/entities/user.entity.js";
 import { UpdateResult } from "typeorm";
+import { UserDto } from "../dto/user.dto.ts";
+import { UserEntity } from "../db/entities/user.entity.ts";
+import ApiError from "../error/api.error.ts";
+import { UserRepo } from "./user.repo.ts";
+
+jest.mock("./user.repo.ts");
 
 describe("User repository", () => {
   const userRepo = UserRepo;
-  let users: UserDto[];
+  const goodUpdateResult = new UpdateResult();
+  goodUpdateResult.affected = 1;
 
-  beforeEach(() => {
-    users = [
-      new UserDto({ id: "1", email: "email1", roleId: "1" }),
-      new UserDto({ id: "2", email: "email2", roleId: "1" }),
-      new UserDto({ id: "3", email: "email3", roleId: "2" }),
-      new UserDto({ id: "4", email: "email4", roleId: "3" })
-    ];
-
-    jest.restoreAllMocks();
+  beforeEach(async () => {
+    await userRepo.clear();
   });
 
   describe("createUser", () => {
-    let createSpy: any;
-    let saveSpy: any;
-    const newUser = new UserDto({ id: "5", email: "email5", roleId: "4", deleted_at: null });
-    beforeEach(() => {
-      createSpy = jest.spyOn(userRepo, "create").mockReturnValueOnce(newUser as UserEntity);
-      saveSpy = jest.spyOn(userRepo, "save").mockImplementation(async (newUserEntity: any) => {
-        const index = users.findIndex((user) => user.id === newUser.id);
-        if (index !== -1) users[index] = newUser;
-        else users.push(newUser);
-        return newUserEntity;
-      });
-    });
+    const newUsers = [
+      new UserDto({ id: "5", email: "email5", roleId: "4" }),
+      new UserDto({ id: "6", email: "email6", roleId: "5" }),
+      new UserDto({ id: "7", email: "email7", roleId: "5" })
+    ];
 
     it("should return new user", async () => {
-      let createdUser = await userRepo.createUser(newUser);
-      expect(createdUser).toEqual(newUser as UserEntity);
-      expect(createSpy).toHaveBeenCalledWith(newUser);
-      expect(users).toEqual([
+      expect(await userRepo.createUser(newUsers[0])).toEqual(newUsers[0] as UserEntity);
+      expect(userRepo.create).toHaveBeenCalledWith(newUsers[0]);
+      expect(await userRepo.getList()).toEqual([
         new UserDto({ id: "1", email: "email1", roleId: "1" }),
         new UserDto({ id: "2", email: "email2", roleId: "1" }),
         new UserDto({ id: "3", email: "email3", roleId: "2" }),
         new UserDto({ id: "4", email: "email4", roleId: "3" }),
-        newUser
+        newUsers[0]
       ]);
-      expect(saveSpy).toHaveBeenCalledWith(newUser as UserEntity);
+      expect(userRepo.save).toHaveBeenCalledWith(newUsers[0] as UserEntity);
     });
+
+    it ("should return new users", async () => {
+        expect(await userRepo.createUsers(newUsers)).toEqual(newUsers as UserEntity[]);
+        expect(userRepo.create).toHaveBeenCalledWith(newUsers);
+        expect(await userRepo.getList()).toEqual([
+          new UserDto({ id: "1", email: "email1", roleId: "1" }),
+          new UserDto({ id: "2", email: "email2", roleId: "1" }),
+          new UserDto({ id: "3", email: "email3", roleId: "2" }),
+          new UserDto({ id: "4", email: "email4", roleId: "3" }),
+            ...newUsers
+        ]);
+        expect(userRepo.save).toHaveBeenCalledWith(newUsers as UserEntity[]);
+    })
   });
 
   describe("getList", () => {
-    let findSpy: any;
-    beforeEach(() => {
-      findSpy = jest.spyOn(userRepo, "find").mockResolvedValueOnce(users as UserEntity[]);
-    });
-
     it("should return all users", async () => {
-      const foundUser = await userRepo.getList();
-      expect(foundUser).toEqual(users as UserEntity[]);
-      expect(findSpy).toHaveBeenCalledWith({ relations: { role: true } });
+      expect(await userRepo.getList()).toEqual([
+        new UserDto({ id: "1", email: "email1", roleId: "1" }),
+        new UserDto({ id: "2", email: "email2", roleId: "1" }),
+        new UserDto({ id: "3", email: "email3", roleId: "2" }),
+        new UserDto({ id: "4", email: "email4", roleId: "3" })
+      ]);
+      expect(userRepo.find).toHaveBeenCalledWith({ relations: { role: true } });
     });
   });
 
   describe("getById", () => {
-    let findOneBySpy: any;
-    beforeEach(() => {
-      findOneBySpy = jest.spyOn(userRepo, "findOneBy").mockImplementationOnce(async (where: any) => {
-        return (users.find((user) => user.id === where.id) as UserEntity) || null;
-      });
-    });
-
     it("should return founded user by id", async () => {
-      let foundUser = await userRepo.getById(users[1].id!);
-      expect(foundUser).toEqual(users[1]);
-      expect(findOneBySpy).toHaveBeenCalledWith({ id: users[1].id });
+      const users = await userRepo.getList();
+      expect(await userRepo.getById(users[1].id!)).toEqual(users[1]);
+      expect(userRepo.findOneBy).toHaveBeenCalledWith({ id: users[1].id });
     });
 
     it("should return null", async () => {
-      const foundUser = await userRepo.getById("invalid id");
-      expect(foundUser).toBeNull();
-      expect(findOneBySpy).toHaveBeenCalledWith({ id: "invalid id" });
+      expect(await userRepo.getById("invalid id")).toBeNull();
+      expect(userRepo.findOneBy).toHaveBeenCalledWith({ id: "invalid id" });
     });
   });
 
   describe("getByEmail", () => {
-    let findOneBySpy: any;
-    beforeEach(() => {
-      findOneBySpy = jest.spyOn(userRepo, "findOneBy").mockImplementationOnce(async (where: any) => {
-        return (users.find((user) => user.email === where.email) as UserEntity) || null;
-      });
-    });
-
     it("should return founded user by email", async () => {
-      const foundUser = await userRepo.getByEmail(users[1].email);
-      expect(foundUser).toEqual(users[1]);
-      expect(findOneBySpy).toHaveBeenCalledWith({ email: users[1].email });
+      const users = await userRepo.getList();
+      expect(await userRepo.getByEmail(users[1].email)).toEqual(users[1]);
+      expect(userRepo.findOneBy).toHaveBeenCalledWith({ email: users[1].email });
     });
 
     it("should return null", async () => {
-      const foundUser = await userRepo.getByEmail(users[0].id!);
-      expect(foundUser).toBeNull();
-      expect(findOneBySpy).toHaveBeenCalledWith({ email: users[0].id });
+      const users = await userRepo.getList();
+      expect(await userRepo.getByEmail(users[0].id!)).toBeNull();
+      expect(userRepo.findOneBy).toHaveBeenCalledWith({ email: users[0].id });
     });
   });
 
   describe("getListByRole", () => {
-    let findSpy: any;
-    beforeEach(() => {
-      findSpy = jest.spyOn(userRepo, "find").mockImplementationOnce(async (options: any) => {
-        return users.filter((user) => user.roleId === options.where.roleId) as UserEntity[];
-      });
-    });
-
     it("should return values with roleId = 1", async () => {
-      const foundedUsersByRole = await userRepo.getListByRole("1");
-      expect(foundedUsersByRole).toEqual(users.slice(0, 2));
-      expect(findSpy).toHaveBeenCalledWith({ relations: { role: true }, where: { roleId: "1" } });
+      const users = await userRepo.getList();
+      expect(await userRepo.getListByRole("1")).toEqual(users.slice(0, 2));
+      expect(userRepo.find).toHaveBeenCalledWith({ relations: { role: true }, where: { roleId: "1" } });
     });
 
     it("should return empty array", async () => {
-      const foundedUsersByRole = await userRepo.getListByRole("5");
-      expect(foundedUsersByRole.length).toBe(0);
-      expect(findSpy).toHaveBeenCalledWith({ relations: { role: true }, where: { roleId: "5" } });
+      const users = await userRepo.getList();
+      expect((await userRepo.getListByRole("5")).length).toBe(0);
+      expect(userRepo.find).toHaveBeenCalledWith({ relations: { role: true }, where: { roleId: "5" } });
     });
   });
 
-  describe("Update user by id", () => {
-    let updateSpy: any;
-    const badUpdateResult = new UpdateResult();
-    badUpdateResult.affected = 0;
-    const goodUpdateResult = new UpdateResult();
-    goodUpdateResult.affected = 1;
-    beforeEach(() => {
-      updateSpy = jest.spyOn(userRepo, "update").mockImplementationOnce(async (id, updateUser: any) => {
-        const index = users.findIndex((user) => user.id === (id as string));
-        if (index !== -1) {
-          users[index] = updateUser;
-          return goodUpdateResult;
-        } else return badUpdateResult;
-      });
-    });
-
+  describe("updateById", () => {
     it("should update values with id = 4", async () => {
+      const users = await userRepo.getList();
       let updateUser = new UserDto({ id: "4", email: "email4", roleId: "4" });
-      const updatedUserResult = await userRepo.updateById(updateUser);
-      expect(updatedUserResult).toEqual(goodUpdateResult);
+      expect(await userRepo.updateById(updateUser)).toEqual(goodUpdateResult);
       expect(users).toEqual([
         new UserDto({ id: "1", email: "email1", roleId: "1" }),
         new UserDto({ id: "2", email: "email2", roleId: "1" }),
         new UserDto({ id: "3", email: "email3", roleId: "2" }),
         updateUser
       ]);
-      expect(updateSpy).toHaveBeenCalledWith(updateUser.id, { ...updateUser });
+      expect(userRepo.update).toHaveBeenCalledWith(updateUser.id, { ...updateUser });
     });
 
-    it("should return bad update result", async () => {
+    it("should throw exception", async () => {
+      const users = await userRepo.getList();
       let updateUser = new UserDto({ id: "5", email: "email5", roleId: "5" });
-      const updatedUserResult = await userRepo.updateById(updateUser);
-      expect(updatedUserResult).toEqual(badUpdateResult);
+      await expect(userRepo.updateById(updateUser)).rejects.toThrow(ApiError);
       expect(users).toEqual([
         new UserDto({ id: "1", email: "email1", roleId: "1" }),
         new UserDto({ id: "2", email: "email2", roleId: "1" }),
         new UserDto({ id: "3", email: "email3", roleId: "2" }),
         new UserDto({ id: "4", email: "email4", roleId: "3" })
       ]);
-      expect(updateSpy).toHaveBeenCalledWith(updateUser.id, { ...updateUser });
+      expect(userRepo.update).toHaveBeenCalledWith(updateUser.id, { ...updateUser });
     });
   });
 
-  describe("Delete user by id", () => {
-    let softDeleteSpy: any;
-    const badUpdateResult = new UpdateResult();
-    badUpdateResult.affected = 0;
-    const goodUpdateResult = new UpdateResult();
-    goodUpdateResult.affected = 1;
-    beforeEach(() => {
-      softDeleteSpy = jest.spyOn(userRepo, "softDelete").mockImplementationOnce(async (id) => {
-        const index = users.findIndex((user) => user.id === (id as string));
-        if (index !== -1) {
-          users[index].deleted_at = new Date("July 1, 2023, 12:00:00");
-          return goodUpdateResult;
-        } else return badUpdateResult;
-      });
-    });
-
+  describe("deleteById", () => {
     it("should return values with roleId = 1", async () => {
-      const deletedUserResult = await userRepo.deleteById("1");
-      expect(deletedUserResult).toEqual(goodUpdateResult);
+      const users = await userRepo.getList();
+      expect(await userRepo.deleteById("1")).toEqual(goodUpdateResult);
       expect(users).toEqual([
         new UserDto({ id: "1", email: "email1", roleId: "1", deleted_at: new Date("July 1, 2023, 12:00:00") }),
         new UserDto({ id: "2", email: "email2", roleId: "1" }),
         new UserDto({ id: "3", email: "email3", roleId: "2" }),
         new UserDto({ id: "4", email: "email4", roleId: "3" })
       ]);
-      expect(softDeleteSpy).toHaveBeenCalledWith("1");
+      expect(userRepo.softDelete).toHaveBeenCalledWith("1");
     });
 
-    it("should return empty array", async () => {
-      const deletedUserResult = await userRepo.deleteById("5");
-      expect(deletedUserResult).toEqual(badUpdateResult);
+    it("should throw exception", async () => {
+      const users = await userRepo.getList();
+      await expect(userRepo.deleteById("5")).rejects.toThrow(ApiError);
       expect(users).toEqual([
         new UserDto({ id: "1", email: "email1", roleId: "1" }),
         new UserDto({ id: "2", email: "email2", roleId: "1" }),
         new UserDto({ id: "3", email: "email3", roleId: "2" }),
         new UserDto({ id: "4", email: "email4", roleId: "3" })
       ]);
-      expect(softDeleteSpy).toHaveBeenCalledWith("5");
+      expect(userRepo.softDelete).toHaveBeenCalledWith("5");
     });
   });
 });
