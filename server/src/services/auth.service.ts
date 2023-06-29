@@ -2,7 +2,6 @@ import { UserRepo } from "../repositories/user.repo.ts";
 import ApiError from "../error/api.error.ts";
 import TokenService from "./token.service.ts";
 import { BcryptUtil } from "../utils/bcrypt.util.ts";
-import { UserEntity } from "../db/entities/user.entity.ts";
 import { UserDto } from "../dto/user.dto.ts";
 
 export default class AuthService {
@@ -29,8 +28,8 @@ export default class AuthService {
     if (!user) throw ApiError.internal("The user is not registered");
     const isPassEquals = await BcryptUtil.compare(password, user.password);
     if (!isPassEquals) throw ApiError.badRequest("Invalid email or password");
-
-    return this.generateToken(user);
+    const userDto = new UserDto(user);
+    return this.generateToken(userDto);
   }
 
   async refresh(refreshToken: string) {
@@ -38,11 +37,11 @@ export default class AuthService {
     const userData = this.tokenService.validateRefreshToken(refreshToken);
     if (!userData) throw ApiError.unauthorized("The user is not logged in");
     const user = await this.userRepo.getById(userData.userId);
-
-    return this.generateToken(user!);
+    const userDto = new UserDto(user);
+    return this.generateToken(userDto);
   }
 
-  generateToken(userDto: UserEntity) {
+  generateToken(userDto: UserDto) {
     const payload = {
       userId: userDto.id,
       roleId: userDto.roleId,
