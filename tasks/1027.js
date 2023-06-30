@@ -14,22 +14,23 @@
  * @return {number}
  */
 var longestArithSeqLength = function (nums) {
-    let dict = {};
-    let currentValue;
-    const uniqNums = nums.filter((value, index, array) => array.indexOf(value) === index);
-    let maxValue = uniqNums.reduce((res, value) => Math.max(res, nums.filter(val => val === value).length), 0);
-    if (maxValue >= uniqNums.length) return maxValue;
-    while (nums.length) {
-        currentValue = nums.pop()
-        nums.map((value) => {
-            const difference = currentValue - value;
-            const currentDict = dict[difference];
-            if (difference) {
-                if (currentDict) currentDict[value] = Math.max((currentDict[value] || 2), ((currentDict[currentValue] || 1) + 1));
-                else dict[difference] = {[value]: 2};
-                maxValue = Math.max(dict[difference][value], maxValue);
-            }
-        });
+  const uniqNums = nums.filter((value, index, array) => array.indexOf(value) === index);
+  let maxValue = uniqNums.reduce((res, value) => Math.max(res, nums.filter((val) => val === value).length), 0);
+  if (maxValue >= uniqNums.length) return maxValue;
+  let dict = {};
+  let currentValue, value;
+  for (let i = 0; i < nums.length; i++) {
+    currentValue = nums[i];
+    for (let j = i + 1; j < nums.length; j++) {
+      value = nums[j];
+      const difference = value - currentValue;
+      const currentDict = dict[difference];
+      if (difference) {
+        if (currentDict) currentDict[value] = Math.max(currentDict[value] || 2, (currentDict[currentValue] || 1) + 1);
+        else dict[difference] = { [value]: 2 };
+        maxValue = Math.max(dict[difference][value], maxValue);
+      }
     }
-    return maxValue;
+  }
+  return maxValue;
 };
