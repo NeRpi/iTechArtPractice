@@ -7,7 +7,6 @@ export const RoleRepo = dbConnector.getRepository(RoleEntity).extend({
   async createRole(roleName: string) {
     try {
       await this.query(`ALTER TYPE "public"."roles_role_enum" ADD VALUE '${roleName}'`);
-      // @ts-ignore
       const role = await this.create({ role: roleName });
       await this.save(role);
       return role;
@@ -46,5 +45,5 @@ export const RoleRepo = dbConnector.getRepository(RoleEntity).extend({
     } catch (e) {
       throw ApiError.internal("Failed to delete role");
     }
-  },
+  }
 });
