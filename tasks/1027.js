@@ -33,5 +33,3 @@ var longestArithSeqLength = function (nums) {
     }
     return maxValue;
 };
-
-module.exports = longestArithSeqLength;
