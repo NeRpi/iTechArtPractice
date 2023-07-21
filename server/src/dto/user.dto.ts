@@ -7,6 +7,7 @@ export class UserDto {
   password: string;
   roleId?: string;
   deleted_at?: Date;
+  elo: number;
 
   constructor(data: any) {
     ({
@@ -17,7 +18,8 @@ export class UserDto {
       email: this.email,
       password: this.password,
       roleId: this.roleId,
-      deleted_at: this.deleted_at
+      deleted_at: this.deleted_at,
+      elo: this.elo
     } = data);
   }
 }
