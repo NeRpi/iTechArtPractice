@@ -12,5 +12,11 @@ export const GameRepo = dbConnector.getRepository(GameEntity).extend({
     } catch (e) {
       throw ApiError.internal("Failed to create game");
     }
+  },
+
+  async motion() {},
+
+  async getById(id: string) {
+    return await this.findOneBy({ id });
   }
 });
