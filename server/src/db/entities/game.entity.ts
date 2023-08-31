@@ -3,10 +3,10 @@ import { BaseEntity } from "./base.entity.ts";
 import { UserEntity } from "./user.entity.ts";
 import { GameTypeEnum } from "../enums/game.type.enum.ts";
 
-@Entity("game")
+@Entity("games")
 export class GameEntity extends BaseEntity {
-  @Column()
-  moves: string;
+  @Column({ default: "" })
+  moves: string = "";
 
   @Column({ type: "enum", enum: GameTypeEnum })
   type: GameTypeEnum;
@@ -15,6 +15,6 @@ export class GameEntity extends BaseEntity {
   result: number;
 
   @ManyToMany("UserEntity")
-  @JoinTable()
+  @JoinTable({name: "games_users"})
   users: UserEntity[];
 }
