@@ -1,2 +1,5 @@
 /server/build/
 /server/.env
+/.idea
+/server/node_modules
+/server/src/statics
