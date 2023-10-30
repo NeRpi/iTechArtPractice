@@ -28,4 +28,8 @@ export default class Bishop extends Piece {
 
     return possibleMoves;
   }
+
+  getAttacke(): Move[] {
+    return this.getMoves();
+  }
 }
