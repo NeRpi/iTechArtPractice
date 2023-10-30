@@ -32,4 +32,8 @@ export default class Queen extends Piece {
 
     return possibleMoves;
   }
+
+  getAttacke(): Move[] {
+    return this.getMoves();
+  }
 }

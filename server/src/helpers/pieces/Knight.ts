@@ -31,4 +31,8 @@ export default class Knight extends Piece {
 
     return possibleMoves;
   }
+
+  getAttacke(): Move[] {
+    return this.getMoves();
+  }
 }

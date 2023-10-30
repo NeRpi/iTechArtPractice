@@ -3,8 +3,8 @@ import Cell from "../Cell.ts";
 import Move from "../Move.ts";
 
 export enum Color {
-  Black,
-  White
+  White = 1,
+  Black
 }
 
 export default abstract class Piece {
@@ -26,6 +26,11 @@ export default abstract class Piece {
     return cell.x + x >= 0 && cell.x + x < 8 && cell.y + y >= 0 && cell.y + y < 8;
   }
 
+  public checkSide(side: Color) {
+    return side === this.color;
+  }
+
   abstract toString(): string;
   abstract getMoves(): Move[];
+  abstract getAttacke(): Move[];
 }

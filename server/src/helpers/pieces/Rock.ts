@@ -28,4 +28,8 @@ export default class Rock extends Piece {
 
     return possibleMoves;
   }
+
+  getAttacke(): Move[] {
+    return this.getMoves();
+  }
 }
