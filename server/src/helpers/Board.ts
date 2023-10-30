@@ -53,8 +53,13 @@ function getFigureFromString(type: string, field: Board, cell: Cell): any {
 
 export default class Board {
   field: Cell[][];
+  side: Color;
 
   constructor() {
+    this.initField();
+  }
+
+  initField() {
     this.field = Array.from(Array(8), (row, x) => Array.from(Array(8), (cell, y) => new Cell(x, y)));
   }
 
@@ -62,25 +67,44 @@ export default class Board {
     this.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
   }
 
+  startGame() {
+    this.side = Color.Black;
+    this.changeSide();
+  }
+
+  changeSide(): void {
+    this.field.forEach((row) => row.forEach((cell) => (cell.isAttacked = false)));
+    const moves: Move[] = [];
+    for (const row of this.field) {
+      for (const cell of row) {
+        if (cell.piece && cell.piece.checkSide(this.side)) moves.push(...cell.piece.getAttacke());
+      }
+    }
+
+    moves.map((move) => move.cellTo).forEach((cell) => (cell.isAttacked = true));
+    this.side = this.side === Color.Black ? Color.White : Color.Black;
+  }
+
   movePiece(piece: Piece, cellFrom: Cell, cellTo: Cell) {
     cellFrom.piece = null;
     cellTo.piece = piece;
     piece.cell = cellTo;
+    this.changeSide();
   }
 
   getMoves(): Move[] {
     const moves: Move[] = [];
     for (const row of this.field) {
       for (const cell of row) {
-        if (cell.piece) moves.push(...cell.piece.getMoves());
+        if (cell.piece && cell.piece.checkSide(this.side)) moves.push(...cell.piece.getMoves());
       }
     }
 
-    console.log(moves.map((move) => move.toString()));
     return moves;
   }
 
   set fen(fen: string) {
+    this.initField();
     const rows: string[] = fen.split("/");
     for (const [index, row] of rows.entries()) {
       let step = 0;
