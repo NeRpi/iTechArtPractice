@@ -13,15 +13,15 @@ export default class Pawn extends Piece {
     return this.isPossibleMove(cellTo) ? [new Move(this, this.cell, cellTo)] : [];
   }
 
-  getAttacke(): Move[] {
+  getAttackedCells(): Cell[] {
     const diraction = this.color === Color.White ? -1 : 1;
-    const moves = [-1, 1]
+    const cells = [-1, 1]
       .filter(
         (d) =>
           this.isPossibleShift(this.cell, diraction, d) &&
           this.isPossibleMove(new Cell(this.cell.x + d, this.cell.y + d))
       )
-      .map((d) => new Move(this, this.cell, new Cell(this.cell.x + d, this.cell.y + d)));
-    return moves;
+      .map((d) => new Cell(this.cell.x + d, this.cell.y + d));
+    return cells;
   }
 }

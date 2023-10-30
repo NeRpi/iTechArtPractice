@@ -1,14 +1,13 @@
+import Board from "../Board.ts";
+import Cell from "../Cell.ts";
 import Move from "../Move.ts";
-import Piece, { Color } from "./Piece.ts";
+import LongRangePiece from "./LongRangePiece.ts";
+import { Color } from "./Piece.ts";
 
-export default class Queen extends Piece {
-  toString(): string {
-    return this.color === Color.White ? "Q" : "q";
-  }
-
-  getMoves(): Move[] {
-    const possibleMoves: Move[] = [];
-    const directions = [
+export default class Queen extends LongRangePiece {
+  constructor(board: Board, cell: Cell, color: Color) {
+    super(board, cell, color);
+    this.directions = [
       [-1, -1],
       [-1, 1],
       [1, -1],
@@ -18,22 +17,9 @@ export default class Queen extends Piece {
       [-1, 0],
       [1, 0]
     ];
-
-    for (const direction of directions) {
-      for (let i = 1; i <= 7; i++) {
-        const [x, y] = [direction[0] * i, direction[1] * i];
-        if (this.isPossibleShift(this.cell, x, y)) {
-          const cellTo = this.board.field[this.cell.x + x][this.cell.y + y];
-          if (this.isPossibleMove(cellTo)) possibleMoves.push(new Move(this, this.cell, cellTo));
-          else break;
-        } else break;
-      }
-    }
-
-    return possibleMoves;
   }
 
-  getAttacke(): Move[] {
-    return this.getMoves();
+  toString(): string {
+    return this.color === Color.White ? "Q" : "q";
   }
 }

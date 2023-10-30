@@ -23,16 +23,10 @@ export default class Knight extends Piece {
     for (const shift of shifts) {
       if (this.isPossibleShift(this.cell, shift[0], shift[1])) {
         const cellTo = this.board.field[this.cell.x + shift[0]][this.cell.y + shift[1]];
-        if (this.isPossibleMove(cellTo)) {
-          possibleMoves.push(new Move(this, this.cell, cellTo));
-        }
+        if (this.isPossibleMove(cellTo)) possibleMoves.push(new Move(this, this.cell, cellTo));
       }
     }
 
     return possibleMoves;
-  }
-
-  getAttacke(): Move[] {
-    return this.getMoves();
   }
 }

@@ -1,6 +1,6 @@
 import Piece from "./pieces/Piece.ts";
 
-export default class Cells {
+export default class Cell {
   readonly x: number;
   readonly y: number;
   public piece: Piece | null;
