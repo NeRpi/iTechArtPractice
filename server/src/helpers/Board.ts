@@ -54,6 +54,8 @@ function getFigureFromString(type: string, field: Board, cell: Cell): any {
 export default class Board {
   field: Cell[][];
   side: Color;
+  shahs: number;
+  requaredCells: Cell[];
 
   constructor() {
     this.initField();
@@ -61,6 +63,7 @@ export default class Board {
 
   initField() {
     this.field = Array.from(Array(8), (row, x) => Array.from(Array(8), (cell, y) => new Cell(x, y)));
+    this.requaredCells = [];
   }
 
   initFigure() {
@@ -72,19 +75,6 @@ export default class Board {
     this.changeSide();
   }
 
-  changeSide(): void {
-    this.field.forEach((row) => row.forEach((cell) => (cell.isAttacked = false)));
-    const moves: Move[] = [];
-    for (const row of this.field) {
-      for (const cell of row) {
-        if (cell.piece && cell.piece.checkSide(this.side)) moves.push(...cell.piece.getAttacke());
-      }
-    }
-
-    moves.map((move) => move.cellTo).forEach((cell) => (cell.isAttacked = true));
-    this.side = this.side === Color.Black ? Color.White : Color.Black;
-  }
-
   movePiece(piece: Piece, cellFrom: Cell, cellTo: Cell) {
     cellFrom.piece = null;
     cellTo.piece = piece;
@@ -92,12 +82,37 @@ export default class Board {
     this.changeSide();
   }
 
-  getMoves(): Move[] {
-    const moves: Move[] = [];
+  changeSide(): void {
+    this.field.forEach((row) => row.forEach((cell) => (cell.isAttacked = false)));
+    this.requaredCells = [];
+    this.shahs = 0;
+    const cells: Cell[] = [];
     for (const row of this.field) {
       for (const cell of row) {
-        if (cell.piece && cell.piece.checkSide(this.side)) moves.push(...cell.piece.getMoves());
+        if (cell.piece && cell.piece.checkSide(this.side)) cells.push(...cell.piece.getAttackedCells());
       }
+    }
+
+    cells.forEach((cell) => (cell.isAttacked = true));
+    this.side = this.side === Color.Black ? Color.White : Color.Black;
+  }
+
+  getMoves(): Move[] {
+    let moves: Move[] = [];
+    let kingMoves: Move[] = [];
+    for (const row of this.field) {
+      for (const cell of row) {
+        if (cell.piece && cell.piece.checkSide(this.side)) {
+          moves.push(...cell.piece.getMoves());
+          if (cell.piece instanceof King) kingMoves = cell.piece.getMoves();
+        }
+      }
+    }
+
+    if (this.shahs === 1) {
+      moves = [...moves.filter((move) => this.requaredCells.includes(move.cellTo)), ...kingMoves];
+    } else if (this.shahs === 2) {
+      moves = kingMoves;
     }
 
     return moves;
@@ -134,6 +149,6 @@ export default class Board {
       }
       fen += (emptyCells || "") + "/";
     }
-    return fen;
+    return fen.slice(0, -1);
   }
 }
