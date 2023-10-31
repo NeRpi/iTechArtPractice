@@ -7,8 +7,9 @@ export default class Knight extends Piece {
   }
 
   getMoves(): Move[] {
-    const possibleMoves: Move[] = [];
+    if (this.bundleCell) return [];
 
+    const possibleMoves: Move[] = [];
     const shifts = [
       [-2, -1],
       [-2, 1],

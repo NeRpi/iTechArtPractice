@@ -1,6 +1,5 @@
 import Board from "../Board.ts";
 import Cell from "../Cell.ts";
-import Move from "../Move.ts";
 import LongRangePiece from "./LongRangePiece.ts";
 import { Color } from "./Piece.ts";
 

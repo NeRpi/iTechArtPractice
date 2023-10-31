@@ -11,6 +11,7 @@ export default abstract class Piece {
   public board: Board;
   public cell: Cell;
   protected color: Color;
+  public bundleCell: Cell | null;
 
   constructor(board: Board, cell: Cell, color: Color) {
     this.board = board;

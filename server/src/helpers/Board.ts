@@ -83,7 +83,12 @@ export default class Board {
   }
 
   changeSide(): void {
-    this.field.forEach((row) => row.forEach((cell) => (cell.isAttacked = false)));
+    this.field.forEach((row) =>
+      row.forEach((cell) => {
+        cell.isAttacked = false;
+        if (cell.piece) cell.piece.bundleCell = null;
+      })
+    );
     this.requaredCells = [];
     this.shahs = 0;
     const cells: Cell[] = [];

@@ -20,6 +20,12 @@ describe("Chess", () => {
       board.startGame();
       expect(board.getMoves()).toHaveLength(12);
     });
+
+    it("Checking getting moves long range pieces", () => {
+      board.fen = "8/8/8/8/8/n7/8/R3k3";
+      board.startGame();
+      expect(board.getMoves()).toHaveLength(6);
+    });
   });
 
   describe("Moves king", () => {
@@ -41,6 +47,20 @@ describe("Chess", () => {
       board.fen = "8/8/8/8/6N1/4Q3/5n2/7K";
       board.startGame();
       expect(board.getMoves()).toHaveLength(5);
+    });
+  });
+
+  describe("Bundle", () => {
+    it("Checking bundle long range piece by long range pieces", () => {
+      board.fen = "8/8/8/8/7r/8/7Q/7K";
+      board.startGame();
+      expect(board.getMoves()).toHaveLength(3);
+    });
+
+    it("Checking bundle piece by long range pieces", () => {
+      board.fen = "8/8/8/8/7r/8/7N/7K";
+      board.startGame();
+      expect(board.getMoves()).toHaveLength(2);
     });
   });
 });
