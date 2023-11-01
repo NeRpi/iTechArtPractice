@@ -51,11 +51,17 @@ function getFigureFromString(type: string, field: Board, cell: Cell): any {
   return figure[type as keyof typeof figure] ? figure[type as keyof typeof figure]() : +type;
 }
 
+const allCastlings = ["K", "Q", "k", "q"];
+
 export default class Board {
   field: Cell[][];
   side: Color;
   shahs: number;
   requaredCells: Cell[];
+  castlings: boolean[];
+  enpassant: Cell | null;
+  halfmove: number;
+  fullmove: number;
 
   constructor() {
     this.initField();
@@ -67,7 +73,7 @@ export default class Board {
   }
 
   initFigure() {
-    this.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+    this.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0";
   }
 
   startGame() {
@@ -125,8 +131,16 @@ export default class Board {
 
   set fen(fen: string) {
     this.initField();
-    const rows: string[] = fen.split("/");
-    for (const [index, row] of rows.entries()) {
+    const [field, side, castlings, enpassant, halfmove, fullmove] = fen.split(" ");
+    this.side = side === "w" ? Color.White : Color.Black;
+    this.castlings = allCastlings.map((castling) => castlings.includes(castling));
+    this.enpassant = enpassant === "-" ? null : new Cell(+enpassant[1] - 1, enpassant.charCodeAt(0) - 97);
+    this.halfmove = +halfmove;
+    this.fullmove = +fullmove;
+
+    const pieces: string[] = field.split("/");
+
+    for (const [index, row] of pieces.entries()) {
       let step = 0;
       for (const figure of row) {
         const cell = new Cell(index, step);
@@ -154,6 +168,16 @@ export default class Board {
       }
       fen += (emptyCells || "") + "/";
     }
-    return fen.slice(0, -1);
+
+    const castlings = this.castlings.reduce((acc, val, index) => (acc += val ? allCastlings[index] : ""), "");
+    fen = [
+      fen.slice(0, -1),
+      this.side.valueOf(),
+      castlings === "" ? "-" : castlings,
+      this.enpassant ? this.enpassant?.toString() : "-",
+      this.halfmove,
+      this.fullmove
+    ].join(" ");
+    return fen;
   }
 }

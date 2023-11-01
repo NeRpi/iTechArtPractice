@@ -3,8 +3,8 @@ import Cell from "../Cell.ts";
 import Move from "../Move.ts";
 
 export enum Color {
-  White,
-  Black
+  White = "w",
+  Black = "b"
 }
 
 export default abstract class Piece {
