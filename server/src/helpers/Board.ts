@@ -1,60 +1,11 @@
 import Cell from "./Cell.ts";
-import Move from "./Move.ts";
-import Bishop from "./pieces/Bishop.ts";
+import FenParser from "./FenParser.ts";
+import BaseMove from "./move/BaseMove.ts";
+import Color from "./enums/color.enum.ts";
 import King from "./pieces/King.ts";
-import Knight from "./pieces/Knight.ts";
-import Pawn from "./pieces/Pawn.ts";
-import Piece, { Color } from "./pieces/Piece.ts";
-import Queen from "./pieces/Queen.ts";
-import Rock from "./pieces/Rock.ts";
-
-function getFigureFromString(type: string, field: Board, cell: Cell): any {
-  const figure = {
-    K: function () {
-      return new King(field, cell, Color.White);
-    },
-    Q: function () {
-      return new Queen(field, cell, Color.White);
-    },
-    R: function () {
-      return new Rock(field, cell, Color.White);
-    },
-    N: function () {
-      return new Knight(field, cell, Color.White);
-    },
-    B: function () {
-      return new Bishop(field, cell, Color.White);
-    },
-    P: function () {
-      return new Pawn(field, cell, Color.White);
-    },
-    k: function () {
-      return new King(field, cell, Color.Black);
-    },
-    q: function () {
-      return new Queen(field, cell, Color.Black);
-    },
-    r: function () {
-      return new Rock(field, cell, Color.Black);
-    },
-    n: function () {
-      return new Knight(field, cell, Color.Black);
-    },
-    b: function () {
-      return new Bishop(field, cell, Color.Black);
-    },
-    p: function () {
-      return new Pawn(field, cell, Color.Black);
-    }
-  };
-
-  return figure[type as keyof typeof figure] ? figure[type as keyof typeof figure]() : +type;
-}
-
-const allCastlings = ["K", "Q", "k", "q"];
 
 export default class Board {
-  field: Cell[][];
+  protected field: Cell[][];
   side: Color;
   shahs: number;
   requaredCells: Cell[];
@@ -77,40 +28,46 @@ export default class Board {
   }
 
   startGame() {
-    this.side = Color.Black;
-    this.changeSide();
+    this.setAttackedCells();
   }
 
-  movePiece(piece: Piece, cellFrom: Cell, cellTo: Cell) {
-    cellFrom.piece = null;
-    cellTo.piece = piece;
-    piece.cell = cellTo;
+  movePiece(move: BaseMove) {
+    move.move();
+    this.fullmove++;
     this.changeSide();
   }
 
   changeSide(): void {
+    this.side = this.side === Color.Black ? Color.White : Color.Black;
+    this.setAttackedCells();
+  }
+
+  clearStates(): void {
+    this.requaredCells = [];
+    this.shahs = 0;
+    this.enpassant = !this.enpassant?.piece || this.side === this.enpassant.piece?.color ? null : this.enpassant;
     this.field.forEach((row) =>
       row.forEach((cell) => {
         cell.isAttacked = false;
         if (cell.piece) cell.piece.bundleCell = null;
       })
     );
-    this.requaredCells = [];
-    this.shahs = 0;
+  }
+
+  setAttackedCells(): void {
+    this.clearStates();
     const cells: Cell[] = [];
     for (const row of this.field) {
       for (const cell of row) {
-        if (cell.piece && cell.piece.checkSide(this.side)) cells.push(...cell.piece.getAttackedCells());
+        if (cell.piece && !cell.piece.checkSide(this.side)) cells.push(...cell.piece.getAttackedCells());
       }
     }
-
     cells.forEach((cell) => (cell.isAttacked = true));
-    this.side = this.side === Color.Black ? Color.White : Color.Black;
   }
 
-  getMoves(): Move[] {
-    let moves: Move[] = [];
-    let kingMoves: Move[] = [];
+  getMoves(): BaseMove[] {
+    let moves: BaseMove[] = [];
+    let kingMoves: BaseMove[] = [];
     for (const row of this.field) {
       for (const cell of row) {
         if (cell.piece && cell.piece.checkSide(this.side)) {
@@ -129,55 +86,28 @@ export default class Board {
     return moves;
   }
 
+  getField() {
+    return this.field;
+  }
+
+  setCell(cell: Cell, x: number, y: number): void {
+    if (x >= 0 && x < 8 && y >= 0 && y < 8) this.field[x][y] = cell;
+  }
+
+  getCell(x: number, y: number): Cell | undefined {
+    if (x >= 0 && x < 8 && y >= 0 && y < 8) return this.field[x][y];
+  }
+
+  getCellByShift(cellFrom: Cell, x: number, y: number): Cell | undefined {
+    if (cellFrom.x + x >= 0 && cellFrom.x + x < 8 && cellFrom.y + y >= 0 && cellFrom.y + y < 8)
+      return this.field[cellFrom.x + x][cellFrom.y + y];
+  }
+
   set fen(fen: string) {
-    this.initField();
-    const [field, side, castlings, enpassant, halfmove, fullmove] = fen.split(" ");
-    this.side = side === "w" ? Color.White : Color.Black;
-    this.castlings = allCastlings.map((castling) => castlings.includes(castling));
-    this.enpassant = enpassant === "-" ? null : new Cell(+enpassant[1] - 1, enpassant.charCodeAt(0) - 97);
-    this.halfmove = +halfmove;
-    this.fullmove = +fullmove;
-
-    const pieces: string[] = field.split("/");
-
-    for (const [index, row] of pieces.entries()) {
-      let step = 0;
-      for (const figure of row) {
-        const cell = new Cell(index, step);
-        const result = getFigureFromString(figure, this, cell);
-        if (typeof result === "number") {
-          step += result;
-        } else {
-          cell.piece = result;
-          this.field[index][step] = cell;
-          step++;
-        }
-      }
-    }
+    FenParser.getByFen(fen, this);
   }
 
   get fen(): string {
-    let fen = "";
-    for (const row of this.field) {
-      let emptyCells = 0;
-      for (const cell of row) {
-        if (cell.piece) {
-          fen += cell.piece ? emptyCells || "" + cell.piece : "";
-          emptyCells = 0;
-        } else emptyCells++;
-      }
-      fen += (emptyCells || "") + "/";
-    }
-
-    const castlings = this.castlings.reduce((acc, val, index) => (acc += val ? allCastlings[index] : ""), "");
-    fen = [
-      fen.slice(0, -1),
-      this.side.valueOf(),
-      castlings === "" ? "-" : castlings,
-      this.enpassant ? this.enpassant?.toString() : "-",
-      this.halfmove,
-      this.fullmove
-    ].join(" ");
-    return fen;
+    return FenParser.getFen(this);
   }
 }

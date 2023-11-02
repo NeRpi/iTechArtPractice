@@ -1,15 +1,17 @@
-import Move from "../Move.ts";
-import Piece, { Color } from "./Piece.ts";
+import BaseMove from "../move/BaseMove.ts";
+import Move from "../move/Move.ts";
+import Color from "../enums/color.enum.ts";
+import Piece from "./Piece.ts";
 
 export default class Knight extends Piece {
   toString(): string {
     return this.color === Color.White ? "N" : "n";
   }
 
-  getMoves(): Move[] {
+  getMoves(): BaseMove[] {
     if (this.bundleCell) return [];
 
-    const possibleMoves: Move[] = [];
+    const possibleMoves: BaseMove[] = [];
     const shifts = [
       [-2, -1],
       [-2, 1],
@@ -22,10 +24,8 @@ export default class Knight extends Piece {
     ];
 
     for (const shift of shifts) {
-      if (this.isPossibleShift(this.cell, shift[0], shift[1])) {
-        const cellTo = this.board.field[this.cell.x + shift[0]][this.cell.y + shift[1]];
-        if (this.isPossibleMove(cellTo)) possibleMoves.push(new Move(this, this.cell, cellTo));
-      }
+      const cellTo = this.board.getCellByShift(this.cell, shift[0], shift[1]);
+      if (cellTo && this.isPossibleMove(cellTo)) possibleMoves.push(new Move(this, this.cell, cellTo));
     }
 
     return possibleMoves;
