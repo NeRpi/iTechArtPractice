@@ -12,4 +12,12 @@ export default class Cell {
     this.piece = null;
     this.isAttacked = false;
   }
+
+  isEmpty() {
+    return !this.piece;
+  }
+
+  toString(): string {
+    return String.fromCharCode(this.y + 97) + (this.x + 1);
+  }
 }

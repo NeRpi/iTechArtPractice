@@ -1,7 +1,8 @@
 import Board from "../Board.ts";
 import Cell from "../Cell.ts";
+import BaseMove from "../move/BaseMove.ts";
+import Color from "../enums/color.enum.ts";
 import LongRangePiece from "./LongRangePiece.ts";
-import { Color } from "./Piece.ts";
 
 export default class Rock extends LongRangePiece {
   constructor(board: Board, cell: Cell, color: Color) {
@@ -16,5 +17,11 @@ export default class Rock extends LongRangePiece {
 
   toString(): string {
     return this.color === Color.White ? "R" : "r";
+  }
+
+  afterMove(move: BaseMove): void {
+    const sideCastlings = this.color === Color.White ? 0 : 2;
+    this.board.castlings[sideCastlings + (this.cell.y % 2)] = false;
+    this.afterMove = super.afterMove;
   }
 }

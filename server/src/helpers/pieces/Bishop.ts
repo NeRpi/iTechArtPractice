@@ -1,7 +1,7 @@
 import Board from "../Board.ts";
 import Cell from "../Cell.ts";
+import Color from "../enums/color.enum.ts";
 import LongRangePiece from "./LongRangePiece.ts";
-import { Color } from "./Piece.ts";
 
 export default class Bishop extends LongRangePiece {
   constructor(board: Board, cell: Cell, color: Color) {
