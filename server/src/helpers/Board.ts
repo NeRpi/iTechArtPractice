@@ -32,8 +32,8 @@ export default class Board {
   }
 
   movePiece(move: BaseMove) {
-    move.move();
-    this.fullmove++;
+    move.move(this);
+    this.fullmove += this.side === Color.Black ? 1 : 0;
     this.changeSide();
   }
 
@@ -59,7 +59,7 @@ export default class Board {
     const cells: Cell[] = [];
     for (const row of this.field) {
       for (const cell of row) {
-        if (cell.piece && !cell.piece.checkSide(this.side)) cells.push(...cell.piece.getAttackedCells());
+        if (cell.piece && !cell.piece.checkSide(this.side)) cells.push(...cell.piece.getAttackedCells(this));
       }
     }
     cells.forEach((cell) => (cell.isAttacked = true));
@@ -71,8 +71,8 @@ export default class Board {
     for (const row of this.field) {
       for (const cell of row) {
         if (cell.piece && cell.piece.checkSide(this.side)) {
-          moves.push(...cell.piece.getMoves());
-          if (cell.piece instanceof King) kingMoves = cell.piece.getMoves();
+          moves.push(...cell.piece.getMoves(this));
+          if (cell.piece instanceof King) kingMoves = cell.piece.getMoves(this);
         }
       }
     }

@@ -46,7 +46,7 @@ export default class FenParser {
       let y = 0;
       for (const figure of row) {
         const cell = new Cell(x, y);
-        const result = getFigureFromString(figure, board, cell);
+        const result = getFigureFromString(figure, cell);
         if (typeof result === "number") {
           y += result;
         } else {

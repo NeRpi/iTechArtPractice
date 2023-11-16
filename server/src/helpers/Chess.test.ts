@@ -55,13 +55,25 @@ describe("Chess", () => {
     it("Checking bundle long range piece by long range pieces", () => {
       board.fen = "8/8/8/8/7r/8/7Q/7K w - - 0 0";
       board.startGame();
-      expect(board.getMoves()).toHaveLength(3);
+      expect(board.getMoves()).toHaveLength(4);
+    });
+
+    it("Checking bundle long range piece by long range pieces", () => {
+      board.fen = "8/8/8/8/7r/8/7B/7K w - - 0 0";
+      board.startGame();
+      expect(board.getMoves()).toHaveLength(2);
     });
 
     it("Checking bundle piece by long range pieces", () => {
       board.fen = "8/8/8/8/7r/8/7N/7K w - - 0 0";
       board.startGame();
       expect(board.getMoves()).toHaveLength(2);
+    });
+
+    it("Checking bundle long range piece by long range pieces", () => {
+      board.fen = "8/8/8/8/7r/8/7Q/8 w - - 0 0";
+      board.startGame();
+      expect(board.getMoves()).toHaveLength(17);
     });
   });
 
@@ -74,7 +86,7 @@ describe("Chess", () => {
       expect(moves.map((move) => move.toString())).toContain("0-0-0");
       const castling = moves.find((move) => move.toString() === "0-0")!;
       board.movePiece(castling);
-      expect(board.fen).toEqual("R4RK1/PPPPPPPP/8/8/8/8/8/8 b - - 0 1");
+      expect(board.fen).toEqual("R4RK1/PPPPPPPP/8/8/8/8/8/8 b - - 0 0");
     });
   });
 
@@ -86,7 +98,7 @@ describe("Chess", () => {
       expect(moves).toHaveLength(2);
       const enpassant = moves.find((move) => move instanceof EnPassantMove);
       if (enpassant) board.movePiece(enpassant);
-      expect(board.fen).toEqual("8/8/8/1P6/8/8/8/8 b - - 0 1");
+      expect(board.fen).toEqual("8/8/8/1P6/8/8/8/8 b - - 0 0");
     });
 
     it("Checking set en passant moves ", () => {
@@ -95,12 +107,12 @@ describe("Chess", () => {
       let moves = board.getMoves();
       expect(moves).toHaveLength(2);
       board.movePiece(moves[1]);
-      expect(board.fen).toEqual("8/8/8/8/Pp6/8/8/8 b - a5 0 1");
+      expect(board.fen).toEqual("8/8/8/8/Pp6/8/8/8 b - a5 0 0");
       moves = board.getMoves();
       expect(moves).toHaveLength(2);
       expect(moves.map((move) => move.toString())).toContain("bxa6");
       board.movePiece(moves[0]);
-      expect(board.fen).toEqual("8/8/8/8/P7/1p6/8/8 w - - 0 2");
+      expect(board.fen).toEqual("8/8/8/8/P7/1p6/8/8 w - - 0 1");
     });
   });
 });

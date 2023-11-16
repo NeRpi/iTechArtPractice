@@ -5,8 +5,8 @@ import Color from "../enums/color.enum.ts";
 import LongRangePiece from "./LongRangePiece.ts";
 
 export default class Rock extends LongRangePiece {
-  constructor(board: Board, cell: Cell, color: Color) {
-    super(board, cell, color);
+  constructor(cell: Cell, color: Color) {
+    super(cell, color);
     this.directions = [
       [0, -1],
       [0, 1],
@@ -19,9 +19,9 @@ export default class Rock extends LongRangePiece {
     return this.color === Color.White ? "R" : "r";
   }
 
-  afterMove(move: BaseMove): void {
+  afterMove(board: Board, move: BaseMove): void {
     const sideCastlings = this.color === Color.White ? 0 : 2;
-    this.board.castlings[sideCastlings + (this.cell.y % 2)] = false;
+    board.castlings[sideCastlings + (this.cell.y % 2)] = false;
     this.afterMove = super.afterMove;
   }
 }

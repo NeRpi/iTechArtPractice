@@ -1,3 +1,4 @@
+import Board from "../Board.ts";
 import Cell from "../Cell.ts";
 import Piece from "../pieces/Piece.ts";
 
@@ -12,6 +13,6 @@ export default abstract class BaseMove {
     this.cellTo = cellTo;
   }
 
-  abstract move(): void;
+  abstract move(board: Board): void;
   abstract toString(): string;
 }

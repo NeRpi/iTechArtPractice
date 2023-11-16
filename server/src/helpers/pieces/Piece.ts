@@ -4,13 +4,11 @@ import BaseMove from "../move/BaseMove.ts";
 import Color from "../enums/color.enum.ts";
 
 export default abstract class Piece {
-  public board: Board;
   public cell: Cell;
   public color: Color;
   public bundleCell: Cell | null;
 
-  constructor(board: Board, cell: Cell, color: Color) {
-    this.board = board;
+  constructor(cell: Cell, color: Color) {
     this.cell = cell;
     this.color = color;
   }
@@ -24,33 +22,33 @@ export default abstract class Piece {
   }
 
   public checkShah(cell: Cell): boolean {
-    return cell.piece?.toString().toLowerCase() === "k";
+    return cell.piece !== null && !cell.piece.checkSide(this.color) && cell.piece.toString().toLowerCase() === "k";
   }
 
   public checkSide(side: Color): boolean {
     return side === this.color;
   }
 
-  getAttackedCells(): Cell[] {
-    const cells = this.getMoves().map((move) => move.cellTo);
+  getAttackedCells(board: Board): Cell[] {
+    const cells = this.getMoves(board).map((move) => move.cellTo);
     for (const cell of cells) {
       if (cell.piece?.toString().toLowerCase() === "k") {
-        this.board.shahs++;
-        this.board.requaredCells.push(...this.getRequiredCells());
+        board.shahs++;
+        board.requaredCells.push(...this.getRequiredCells(board));
         break;
       }
     }
     return cells;
   }
 
-  getRequiredCells(): Cell[] {
+  getRequiredCells(board: Board): Cell[] {
     return [this.cell];
   }
 
-  afterMove(move: BaseMove): void {
+  afterMove(board: Board, move: BaseMove): void {
     return;
   }
 
   abstract toString(): string;
-  abstract getMoves(): BaseMove[];
+  abstract getMoves(board: Board): BaseMove[];
 }

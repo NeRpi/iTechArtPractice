@@ -1,3 +1,4 @@
+import Board from "../Board.ts";
 import Cell from "../Cell.ts";
 import BaseMove from "../move/BaseMove.ts";
 import Move from "../move/Move.ts";
@@ -7,12 +8,19 @@ export default abstract class LongRangePiece extends Piece {
   protected directions: number[][];
   protected requiredDirection: number[];
 
-  getMoves(): BaseMove[] {
+  getMoves(board: Board): BaseMove[] {
     const possibleMoves: BaseMove[] = [];
-    for (const direction of this.directions) {
+    let directions = this.directions;
+
+    if (this.bundleCell) {
+      directions = [[Math.sign(this.bundleCell.x - this.cell.x), Math.sign(this.bundleCell.y - this.cell.y)]];
+      if (!this.directions.some((direction) => `${direction}` === `${directions[0]}`)) return [];
+    }
+
+    for (const direction of directions) {
       for (let i = 1; i <= 7; i++) {
-        const [x, y] = [direction[0] * i, direction[1] * i];
-        const cellTo = this.board.getCellByShift(this.cell, x, y);
+        const [dx, dy] = [direction[0] * i, direction[1] * i];
+        const cellTo = board.getCellByShift(this.cell, dx, dy);
         if (cellTo) {
           if (this.isPossibleMove(cellTo)) {
             possibleMoves.push(new Move(this, this.cell, cellTo));
@@ -23,41 +31,46 @@ export default abstract class LongRangePiece extends Piece {
       }
     }
 
-    return this.bundleCell ? possibleMoves.filter((move) => move.cellTo === this.bundleCell) : possibleMoves;
+    return possibleMoves;
   }
 
-  checkBundle(): void {
-    let bundlePiece: Piece | null = null;
-    main_loop: for (const direction of this.directions) {
+  checkBundle(board: Board): void {
+    let result: Piece | null = null;
+    for (const direction of this.directions) {
+      let bundlePiece: Piece | null = null;
       for (let i = 1; i <= 7; i++) {
-        const [x, y] = [direction[0] * i, direction[1] * i];
-        const cell = this.board.getCellByShift(this.cell, x, y);
+        const [dx, dy] = [direction[0] * i, direction[1] * i];
+        const cell = board.getCellByShift(this.cell, dx, dy);
         if (cell) {
           if (cell.piece) {
-            if (cell.piece.checkSide(this.color) || cell.piece.toString().toLowerCase() === "k") break main_loop;
-            else if (!bundlePiece) bundlePiece = cell.piece;
-            else {
-              bundlePiece = null;
-              break main_loop;
-            }
+            if (!cell.piece.checkSide(this.color)) {
+              if (cell.piece.toString().toLowerCase() === "k" && bundlePiece) {
+                result = bundlePiece;
+              } else if (!bundlePiece) {
+                bundlePiece = cell.piece;
+              } else {
+                bundlePiece = null;
+                break;
+              }
+            } else break;
           }
         } else break;
       }
     }
 
-    if (bundlePiece) bundlePiece.bundleCell = this.cell;
+    if (result) result.bundleCell = this.cell;
   }
 
-  getAttackedCells(): Cell[] {
-    this.checkBundle();
-    return super.getAttackedCells();
+  getAttackedCells(board: Board): Cell[] {
+    this.checkBundle(board);
+    return super.getAttackedCells(board);
   }
 
-  getRequiredCells(): Cell[] {
+  getRequiredCells(board: Board): Cell[] {
     const requiredCells: Cell[] = [this.cell];
     for (let i = 1; i <= 7; i++) {
-      const [x, y] = [this.requiredDirection[0] * i, this.requiredDirection[1] * i];
-      const cellTo = this.board.getCellByShift(this.cell, x, y);
+      const [dx, dy] = [this.requiredDirection[0] * i, this.requiredDirection[1] * i];
+      const cellTo = board.getCellByShift(this.cell, dx, dy);
       if (cellTo) {
         if (cellTo.piece) break;
         if (this.isPossibleMove(cellTo)) requiredCells.push(cellTo);
