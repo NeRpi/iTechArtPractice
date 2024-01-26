@@ -24,6 +24,7 @@ export const jwtSocketMiddleware = (socket: Socket, next: any) => {
     return next(ApiError.unauthorized("The user is not logged in"));
   }
 };
+
 const checkJWT = (authorizationHeader: string | undefined, next: NextFunction) => {
   try {
     if (!authorizationHeader) return next(ApiError.unauthorized("Access token is missing"));
