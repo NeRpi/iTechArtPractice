@@ -1,16 +1,16 @@
 import UserService from "../services/user.service.ts";
-import MinioService from "../services/minio.service.ts";
+// import MinioService from "../services/minio.service.ts";
 import { Request, Response, NextFunction } from "express";
 import { UserDto } from "../dto/user.dto.ts";
 import path from "path";
 
 class UserController {
   private userService: UserService;
-  private minioService: MinioService;
+  // private minioService: MinioService;
 
   constructor() {
     this.userService = new UserService();
-    this.minioService = new MinioService();
+    // this.minioService = new MinioService();
   }
 
   create = async (req: Request, res: Response, next: NextFunction) => {
@@ -76,9 +76,9 @@ class UserController {
   importUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const file = req.file;
-      this.minioService.uploadFile(file?.path as string, {
-        "Content-type": "text/csv",
-      });
+      // this.minioService.uploadFile(file?.path as string, {
+      //   "Content-type": "text/csv",
+      // });
       return res.json(await this.userService.importUsers(file?.path as string));
     } catch (e) {
       next(e);

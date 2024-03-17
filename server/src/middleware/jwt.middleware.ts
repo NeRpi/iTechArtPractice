@@ -1,5 +1,5 @@
 import ApiError from "../error/api.error.ts";
-import TokenService from "../services/token.service.ts";
+import TokenService from "../utils/token.util.ts";
 import { NextFunction, Request, Response } from "express";
 import { UserDto } from "../dto/user.dto.js";
 import { Socket } from "socket.io";

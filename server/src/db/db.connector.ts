@@ -10,15 +10,11 @@ const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false,
   entities: ["src/db/entities/*.entity.ts"],
-  migrations: ["src/db/migrations/*.ts", "src/db/consts/**/*.ts"],
+  migrations: ["src/db/migrations/*.ts", "src/db/consts/**/*.ts"]
 });
 
 AppDataSource.initialize()
-  .then(() => {
-    console.log("Data Source has been initialized!");
-  })
-  .catch((err) => {
-    console.error("Error during Data Source initialization", err);
-  });
+  .then(() => console.log("Data Source has been initialized!"))
+  .catch((err) => console.error("Error during Data Source initialization", err));
 
 export default AppDataSource;

@@ -25,23 +25,20 @@ export default class GameService {
 
   async makeMove(game: Board, moveData: any) {
     const { fromX, fromY, toX, toY } = moveData;
-    if (fromX && fromY && toX && toY) {
-      const cellFrom = game.getCell(fromX, fromY);
-      if (!cellFrom) return false;
-      const cellTo = game.getCell(toX, toY);
-      if (!cellTo) return false;
-      const piece = cellFrom.piece;
-      if (!piece) return false;
-      const move = new Move(piece, cellFrom, cellTo);
-      const isPossibleMove = game
-        .getMoves()
-        .map((m) => m.toString())
-        .includes(move.toString());
-      if (!isPossibleMove) return false;
-      game.movePiece(move);
-      console.log(game.fen);
-      return true;
-    }
+    const cellFrom = game.getCell(fromX, fromY);
+    if (!cellFrom) return false;
+    const cellTo = game.getCell(toX, toY);
+    if (!cellTo) return false;
+    const piece = cellFrom.piece;
+    if (!piece) return false;
+    const move = new Move(piece, cellFrom, cellTo);
+    const isPossibleMove = game
+      .getMoves()
+      .map((m) => m.toString())
+      .includes(move.toString());
+    if (!isPossibleMove) return false;
+    game.movePiece(move);
+    return true;
   }
 
   async getById(id: string) {

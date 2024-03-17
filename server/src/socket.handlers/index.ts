@@ -3,6 +3,6 @@ import { jwtSocketMiddleware } from "../middleware/jwt.middleware.js";
 import gameSocketHandler from "./game.socket.handler.js";
 
 export default function socketHandlers(io: Server, socket: Socket) {
-  io.use(jwtSocketMiddleware);
-  gameSocketHandler(io, socket);
+  // io.use(jwtSocketMiddleware);
+  io.of("/game").on("connection", (socket) => gameSocketHandler(io.of("/game"), socket));
 }

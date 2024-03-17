@@ -1,6 +1,6 @@
 import { UserRepo } from "../repositories/user.repo.ts";
 import ApiError from "../error/api.error.ts";
-import TokenService from "./token.service.ts";
+import TokenService from "../utils/token.util.ts";
 import { BcryptUtil } from "../utils/bcrypt.util.ts";
 import { UserDto } from "../dto/user.dto.ts";
 
@@ -14,8 +14,7 @@ export default class AuthService {
   }
 
   async registration(email: string, password: string) {
-    if (await this.userRepo.getByEmail(email))
-      throw ApiError.internal("The mail is already registered");
+    if (await this.userRepo.getByEmail(email)) throw ApiError.internal("The mail is already registered");
     const hashPassword = await BcryptUtil.hash(password);
     const userDto = new UserDto({ email, password: hashPassword });
     const user = await this.userRepo.createUser(userDto);
@@ -44,7 +43,7 @@ export default class AuthService {
   generateToken(userDto: UserDto) {
     const payload = {
       userId: userDto.id,
-      roleId: userDto.roleId,
+      roleId: userDto.roleId
     };
 
     const tokens = this.tokenService.generateTokens(payload);

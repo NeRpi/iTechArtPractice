@@ -3,5 +3,6 @@
 	"semi": false,
 	"singleQuote": false,
 	"printWidth": 100,
+	"tabWidth": 1,
 	"useTabs": true
 }

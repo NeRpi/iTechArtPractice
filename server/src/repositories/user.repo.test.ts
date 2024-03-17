@@ -91,7 +91,7 @@ describe("User repository", () => {
   describe("updateById", () => {
     it("should update values with id = 4", async () => {
       const users = await userRepo.getList();
-      let updateUser = new UserDto({ id: "4", email: "email4", roleId: "4" });
+      const updateUser = new UserDto({ id: "4", email: "email4", roleId: "4" });
       expect(await userRepo.updateById(updateUser)).toEqual(goodUpdateResult);
       baseUsers[3] = updateUser;
       expect(users).toEqual(baseUsers);
@@ -100,7 +100,7 @@ describe("User repository", () => {
 
     it("should throw exception", async () => {
       const users = await userRepo.getList();
-      let updateUser = new UserDto({ id: "5", email: "email5", roleId: "5" });
+      const updateUser = new UserDto({ id: "5", email: "email5", roleId: "5" });
       await expect(userRepo.updateById(updateUser)).rejects.toThrow(ApiError);
       expect(users).toEqual(baseUsers);
       expect(userRepo.update).toHaveBeenCalledWith(updateUser.id, { ...updateUser });

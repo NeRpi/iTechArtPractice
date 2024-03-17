@@ -12,7 +12,7 @@ import errorHandlingMiddleware from "./middleware/error.handling.middleware.ts";
 const PORT = process.env.PORT || 5000;
 const app: Express = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, { cors: { origin: "http://localhost:3000" } });
 
 app.use(cors());
 app.use(express.json());

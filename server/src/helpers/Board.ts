@@ -16,11 +16,14 @@ export default class Board {
 
   constructor() {
     this.initField();
+    this.castlings = [true, true];
+    this.side = Color.White;
+    this.requaredCells = [];
+    this.initFigure();
   }
 
   initField() {
     this.field = Array.from(Array(8), (row, x) => Array.from(Array(8), (cell, y) => new Cell(x, y)));
-    this.requaredCells = [];
   }
 
   initFigure() {
