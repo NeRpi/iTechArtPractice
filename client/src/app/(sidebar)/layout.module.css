@@ -1,0 +1,9 @@
+.layout {
+	display: flex;
+	position: absolute;
+	z-index: 10000;
+	color: black;
+	height: 100svh;
+	width: 100vw;
+	overflow: hidden;
+}

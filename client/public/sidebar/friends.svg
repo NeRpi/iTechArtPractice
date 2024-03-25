@@ -1,0 +1,25 @@
+<svg width="24.000000" height="24.000000" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<filter id="filter_70_222_dd" x="-3.249756" y="3.748047" width="24.500000" height="24.501953" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.33333"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.33333"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+			<feBlend mode="normal" in2="effect_dropShadow_1" result="effect_dropShadow_2"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_2" result="shape"/>
+		</filter>
+	</defs>
+	<rect id="xxl-36px" width="24.000000" height="24.000000" fill="#FFFFFF" fill-opacity="0"/>
+	<path id="Combined Shape" d="M10.9263 12.8604C12.9832 11.9502 14.1221 9.72363 13.6567 7.52344C13.1917 5.32227 11.2495 3.74805 9.00024 3.74805C6.75098 3.74805 4.80884 5.32227 4.34375 7.52344C3.87842 9.72363 5.01733 11.9502 7.07422 12.8604C3.69312 13.6602 1.16895 16.4834 0.750244 19.9326C0.750244 20.0166 0.783691 20.0977 0.843262 20.1572C0.902588 20.2168 0.983398 20.25 1.06738 20.25L16.9331 20.25C17.1082 20.25 17.2502 20.1084 17.2502 19.9326C16.8315 16.4834 14.3074 13.6602 10.9263 12.8604ZM20.4509 10.3896C21.1685 12.126 20.3694 14.1172 18.6506 14.876C21.1096 15.458 22.9453 17.5107 23.25 20.0195C23.2498 20.1475 23.1465 20.25 23.0193 20.25L19.478 20.25C19.4919 20.1455 19.4993 20.0391 19.5 19.9326L19.5 19.8037L19.4834 19.6758C19.126 16.6484 17.47 13.9258 14.9458 12.2158C15.6399 11.1045 16.0081 9.82031 16.0083 8.50977L16.0083 8.4834C17.761 7.80762 19.7332 8.65332 20.4509 10.3896Z" clip-rule="evenodd" fill="#6F44DF" fill-opacity="1.000000" fill-rule="evenodd"/>
+</svg>
