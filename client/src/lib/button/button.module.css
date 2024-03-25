@@ -1,0 +1,18 @@
+.button {
+	width: 170px;
+	height: 40px;
+	border-radius: 5px;
+	background: linear-gradient(181.23deg, rgb(152, 49, 206) -665.37%, rgb(55, 62, 252) 393.715%);
+	color: rgb(255, 255, 255);
+	font-family: var(--font-inter);
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 24px;
+	letter-spacing: 0px;
+}
+
+.outline {
+	background: rgba(255, 255, 255, 0);
+	color: rgb(255, 255, 255);
+	border: 3px solid rgb(144, 74, 122);
+}

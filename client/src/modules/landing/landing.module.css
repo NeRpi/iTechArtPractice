@@ -1,0 +1,203 @@
+.container {
+	background-color: #0d112e;
+}
+
+.container > section {
+	height: 100svh;
+}
+
+.logo {
+	display: flex;
+	position: absolute;
+	top: 40px;
+	left: 40px;
+	gap: 24px;
+}
+
+.logoWrapper {
+	width: 30px;
+}
+
+.logoChess {
+	color: rgb(255, 255, 255);
+	font-size: 56px;
+	font-weight: 500;
+	line-height: 42px;
+	letter-spacing: 0px;
+	text-align: left;
+}
+
+.logoWelcome {
+	color: rgb(209, 134, 224);
+	font-family: var(--font-inter);
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 48px;
+	letter-spacing: 0px;
+	text-align: left;
+}
+
+.purpleEllipse {
+	filter: blur(105px);
+	background: rgb(178, 63, 197);
+	opacity: 0.29;
+	position: absolute;
+	width: 439px;
+	height: 439px;
+	left: -182px;
+	right: 1663px;
+	top: 0;
+	bottom: 641px;
+}
+
+.blueEllipse {
+	position: absolute;
+	width: 381px;
+	height: 381px;
+	left: 67px;
+	right: 1472px;
+	top: -200px;
+	bottom: 899px;
+	filter: blur(100px);
+	background: rgb(0, 136, 195);
+	opacity: 0.26;
+}
+
+.mainSection {
+	display: flex;
+	align-content: space-between;
+}
+
+.leftSide {
+	min-height: 100svh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 60vw;
+	text-align: left;
+	gap: 8px;
+}
+
+.mainText {
+	white-space: pre-wrap;
+	font-size: 52px;
+	font-weight: 500;
+	line-height: 72px;
+	letter-spacing: 0px;
+	text-align: left;
+}
+
+.text {
+	color: rgb(159, 159, 159);
+	font-size: 28px;
+	font-weight: 300;
+	line-height: 48px;
+	letter-spacing: 0px;
+	text-align: left;
+}
+
+.gradientText {
+	display: inline;
+}
+
+.mainText > .gradientText {
+	background: -webkit-linear-gradient(0deg, #b3658dff, #ae68aaff, #802de7ff);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.imageWrapper {
+	position: relative;
+	height: 100%;
+	width: 40vw;
+}
+
+.buttons {
+	margin-top: 30px;
+	display: flex;
+	justify-content: space-between;
+	width: 95%;
+}
+
+.buttons > * {
+	width: 200px;
+}
+
+.featuresTitle {
+	margin-top: 100px;
+	margin-bottom: 15svh;
+	color: rgb(255, 255, 255);
+	font-size: 48px;
+	font-weight: 400;
+	line-height: 72px;
+	letter-spacing: 0px;
+	text-align: left;
+	width: 100%;
+	text-align: center;
+}
+
+.features {
+	display: flex;
+	justify-content: space-between;
+	padding: 0 5vw;
+}
+
+.trackSectionTitle {
+	font-size: 48px;
+	font-weight: 500;
+	text-align: left;
+}
+
+.trackSectionTitle > .gradientText {
+	background: -webkit-linear-gradient(0deg, #b16697, #e897eb, #863faa);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.trackSectionText {
+	color: rgba(176, 176, 176, 0.99);
+	font-size: 24px;
+	font-weight: 300;
+	letter-spacing: 0%;
+	text-align: left;
+	margin-bottom: 28px;
+}
+
+.trackingSection {
+	display: flex;
+	background: linear-gradient(180deg, rgb(13, 17, 46), rgb(42, 42, 75) 100%);
+}
+
+.trackingSection > .leftSide {
+	padding: 50px 50px;
+	min-height: 100svh;
+	align-items: self-start;
+	justify-content: start;
+	width: 60vw;
+	text-align: left;
+}
+
+.trackingSection > .rightSide > .imageWrapper {
+	width: 45vw;
+}
+
+.studySection {
+	display: flex;
+	justify-content: space-between;
+	padding: 100px;
+	background: linear-gradient(188.33deg, rgb(42, 42, 75) 65.311%, rgb(47, 31, 47) 155.823%);
+}
+
+.studySection > span {
+	font-family: var(--font-poppins);
+	font-size: 24px;
+	font-weight: 500;
+	letter-spacing: 0%;
+	text-align: center;
+	width: 666px;
+}
+
+.studyText {
+	align-self: self-end;
+}

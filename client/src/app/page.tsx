@@ -1,5 +1,6 @@
 "use client"
 import { useHomeSocket } from "@/hooks/socket/useHomeSocket"
+import Landing from "@/modules/landing/landing"
 
 export default function Home() {
 	const { onSearch } = useHomeSocket()
@@ -7,7 +8,8 @@ export default function Home() {
 	return (
 		<main className="">
 			<div className="">
-				<button onClick={onSearch}>Start game</button>
+				{/* <button onClick={onSearch}>Start game</button> */}
+				<Landing />
 			</div>
 		</main>
 	)
